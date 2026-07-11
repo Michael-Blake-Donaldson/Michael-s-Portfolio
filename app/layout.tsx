@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -12,14 +13,52 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Starter Project",
-  description: "A clean starting point for building your site.",
-  icons: {
-    icon: "/favicon.svg",
-    shortcut: "/favicon.svg",
-  },
-};
+const siteTitle = "Michael Donaldson | Full-Stack Software Engineer";
+const siteDescription =
+  "Full-stack software engineering portfolio for Michael Donaldson, featuring React, Node.js, PostgreSQL, Python, WebGL, APIs, authentication, performance, accessibility, and product-minded engineering work.";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const headerList = await headers();
+  const host = headerList.get("x-forwarded-host") ?? headerList.get("host") ?? "localhost:3000";
+  const protocol = headerList.get("x-forwarded-proto") ?? (host.includes("localhost") ? "http" : "https");
+  const metadataBase = new URL(`${protocol}://${host}`);
+
+  return {
+    metadataBase,
+    title: siteTitle,
+    description: siteDescription,
+    applicationName: "Michael Donaldson Portfolio",
+    alternates: {
+      canonical: "/",
+    },
+    openGraph: {
+      title: siteTitle,
+      description: siteDescription,
+      url: "/",
+      siteName: "Michael Donaldson Portfolio",
+      images: [
+        {
+          url: "/og.png",
+          width: 1200,
+          height: 630,
+          alt: "Michael Donaldson full-stack software engineering portfolio preview",
+        },
+      ],
+      locale: "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: siteTitle,
+      description: siteDescription,
+      images: ["/og.png"],
+    },
+    icons: {
+      icon: "/favicon.svg",
+      shortcut: "/favicon.svg",
+    },
+  };
+}
 
 export default function RootLayout({
   children,
