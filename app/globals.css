@@ -35,6 +35,11 @@ html {
   scroll-behavior: smooth;
 }
 
+html,
+body {
+  min-height: 100%;
+}
+
 body {
   margin: 0;
   background: var(--background);
@@ -69,7 +74,7 @@ button:focus-visible {
 .site-shell {
   position: relative;
   min-height: 100vh;
-  overflow: hidden;
+  overflow: visible;
   background:
     radial-gradient(circle at 16% 8%, rgba(216, 121, 84, 0.18), transparent 26rem),
     radial-gradient(circle at 84% 12%, rgba(143, 216, 197, 0.16), transparent 24rem),

@@ -1237,6 +1237,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!selectedProject && !hiringBriefOpen) {
+      document.body.classList.remove("modal-open");
       return;
     }
 
