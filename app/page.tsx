@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const navItems = [
   { href: "#work", label: "Exhibits" },
@@ -34,6 +34,12 @@ type FeaturedProject = {
   }[];
   interviewAngles: string[];
   nextSteps: string[];
+  plate: {
+    artifact: string;
+    signal: string;
+    metric: string;
+    traces: string[];
+  };
   stack: string[];
   visual: "earth" | "raidbase" | "planthaven";
 };
@@ -111,6 +117,12 @@ const featuredProjects: FeaturedProject[] = [
       "Add performance telemetry around layer changes and initial load.",
       "Expand keyboard navigation for dense visual exploration.",
     ],
+    plate: {
+      artifact: "Layered atlas shard",
+      signal: "Spatial data made readable",
+      metric: "35% render gain",
+      traces: ["Dataset toggles", "Canvas performance", "Semantic controls"],
+    },
     stack: ["React", "JavaScript", "WebGL", "Data visualization", "ARIA"],
     visual: "earth",
   },
@@ -186,6 +198,12 @@ const featuredProjects: FeaturedProject[] = [
       "Add a moderation dashboard with review queues and audit history.",
       "Add browser tests for onboarding, LFG creation, squad joining, and account deletion.",
     ],
+    plate: {
+      artifact: "Community ledger tablet",
+      signal: "Trust modeled as product data",
+      metric: "Full-stack alpha",
+      traces: ["Auth journeys", "Reputation model", "Lifecycle flows"],
+    },
     stack: ["Next.js", "PostgreSQL", "Prisma", "NextAuth", "Docker", "Vitest"],
     visual: "raidbase",
   },
@@ -261,6 +279,12 @@ const featuredProjects: FeaturedProject[] = [
       "Add checkout test coverage around happy paths, failures, and empty-cart states.",
       "Add lightweight analytics for product discovery, cart abandonment, and load-time regressions.",
     ],
+    plate: {
+      artifact: "Commerce garden seal",
+      signal: "Secure flows with faster data",
+      metric: "30-40% query gain",
+      traces: ["Protected routes", "Indexed queries", "Checkout state"],
+    },
     stack: ["React", "Supabase", "PostgreSQL", "Stripe", "REST APIs", "JWT"],
     visual: "planthaven",
   },
@@ -293,33 +317,51 @@ const secondaryProjects = [
   },
 ];
 
-const skillGroups = [
+const toolTrays = [
   {
-    label: "Shape interfaces",
+    id: "interface",
+    label: "Interface tools",
     note: "The visible artifact",
+    signal: "I shape product screens so users can understand what to do next.",
     skills: ["React", "Next.js", "TypeScript", "HTML", "CSS", "Tailwind", "Responsive UI"],
+    appearsIn: ["Earth 3D Dashboard", "RaidBase", "PlantHaven"],
+    proof: "Strongest signal: turning messy workflows into clear, responsive interfaces.",
   },
   {
-    label: "Model systems",
+    id: "systems",
+    label: "System tools",
     note: "The structure beneath",
+    signal: "I connect interfaces to durable models, APIs, auth, and product rules.",
     skills: ["Node.js", "REST APIs", "PostgreSQL", "Supabase", "Prisma", "SQL", "Auth flows"],
+    appearsIn: ["RaidBase", "PlantHaven", "PIA"],
+    proof: "Strongest signal: database-backed product flows with authentication and lifecycle thinking.",
   },
   {
-    label: "Prove the build",
+    id: "proof",
+    label: "Proof tools",
     note: "The verification layer",
+    signal: "I care about whether the build works after the first happy-path demo.",
     skills: ["Git", "GitHub", "Docker", "GitHub Actions", "Vitest", "Playwright", "Validation"],
+    appearsIn: ["RaidBase", "DRASTIC Planner", "PlantHaven"],
+    proof: "Strongest signal: testing plans around real journeys, not only isolated functions.",
   },
   {
-    label: "Refine behavior",
-    note: "The polish pass",
+    id: "polish",
+    label: "Polish tools",
+    note: "The refinement pass",
+    signal: "I look for the performance, accessibility, and security details users feel.",
     skills: ["WebGL", "Chrome DevTools", "Caching", "Accessibility", "JWT", "HTTPS", "Section 508"],
+    appearsIn: ["Earth 3D Dashboard", "PlantHaven", "Unscripted Inc."],
+    proof: "Strongest signal: measured performance work plus accessibility-aware interface decisions.",
   },
-];
+] as const;
 
 const timeline = [
   {
     role: "Full-Stack Software Engineer Intern",
     org: "Unscripted Inc.",
+    layer: "Layer 01",
+    signal: "Professional software delivery",
     meta: "Remote | May 2024-September 2024",
     detail:
       "Contributed to full-stack development with React, REST APIs, frontend performance debugging, Agile planning, and collaborative iteration. Reduced unnecessary React re-renders and improved load time by roughly 25%.",
@@ -327,6 +369,8 @@ const timeline = [
   {
     role: "General Merchandise Manager",
     org: "Target",
+    layer: "Layer 02",
+    signal: "Operational leadership under pressure",
     meta: "Orlando, Florida | December 2025-Present",
     detail:
       "Leads an $8M+ business area across inventory, merchandising, fulfillment, and guest experience while managing and developing approximately 30 employees. Improved inventory accuracy to 98%+ and reduced shrink by roughly 15%.",
@@ -334,6 +378,8 @@ const timeline = [
   {
     role: "Operations Coordinator",
     org: "The Walt Disney Company",
+    layer: "Layer 03",
+    signal: "Cross-team coordination and process improvement",
     meta: "Orlando, Florida | 2022-Present",
     detail:
       "Coordinated high-volume operations across departments, supported 50+ employees, and improved inventory accuracy by 18% through workflow optimization and consistent follow-through.",
@@ -341,6 +387,8 @@ const timeline = [
   {
     role: "B.S. Software Engineering",
     org: "Southern New Hampshire University",
+    layer: "Layer 04",
+    signal: "Formal engineering foundation",
     meta: "Expected 2027",
     detail:
       "Focused on software security, testing, UI/UX, computer graphics, systems analysis and design, databases, and full-stack application development.",
@@ -484,10 +532,173 @@ function DinoRunner() {
   );
 }
 
+function RelicScene() {
+  const sceneRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const host = sceneRef.current;
+    let cleanupScene: (() => void) | undefined;
+    let cancelled = false;
+
+    if (!host) {
+      return;
+    }
+
+    const createScene = async () => {
+      const THREE = await import("three");
+
+      if (cancelled) {
+        return;
+      }
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
+      camera.position.set(0, 0, 5.4);
+
+      const renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: true,
+        powerPreference: "high-performance",
+      });
+      renderer.setClearColor(0x000000, 0);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.domElement.className = "relic-3d-canvas";
+      host.appendChild(renderer.domElement);
+
+      const group = new THREE.Group();
+      group.rotation.set(-0.16, -0.42, 0.06);
+      scene.add(group);
+
+      const tabletGeometry = new THREE.BoxGeometry(2.35, 1.42, 0.18, 5, 4, 1);
+      const tabletMaterial = new THREE.MeshStandardMaterial({
+        color: 0xd7c196,
+        metalness: 0.04,
+        roughness: 0.86,
+      });
+      const tablet = new THREE.Mesh(tabletGeometry, tabletMaterial);
+      group.add(tablet);
+
+      const edgeGeometry = new THREE.EdgesGeometry(tabletGeometry);
+      const edgeMaterial = new THREE.LineBasicMaterial({
+        color: 0x5b4a36,
+        opacity: 0.52,
+        transparent: true,
+      });
+      tablet.add(new THREE.LineSegments(edgeGeometry, edgeMaterial));
+
+      const lineGeometry = new THREE.BoxGeometry(0.92, 0.035, 0.02);
+      const lineMaterial = new THREE.MeshBasicMaterial({ color: 0x211d17 });
+      [-0.32, -0.12, 0.1].forEach((y, index) => {
+        const line = new THREE.Mesh(lineGeometry, lineMaterial);
+        line.position.set(-0.22, y, 0.105);
+        line.scale.x = index === 1 ? 0.78 : 1;
+        tablet.add(line);
+      });
+
+      const dotGeometry = new THREE.SphereGeometry(0.055, 12, 12);
+      const mineralMaterial = new THREE.MeshBasicMaterial({ color: 0x8fd6c5 });
+      const clayMaterial = new THREE.MeshBasicMaterial({ color: 0xd87954 });
+      [
+        { x: 0.62, y: 0.34, material: mineralMaterial },
+        { x: 0.72, y: -0.25, material: clayMaterial },
+      ].forEach((dot) => {
+        const marker = new THREE.Mesh(dotGeometry, dot.material);
+        marker.position.set(dot.x, dot.y, 0.12);
+        tablet.add(marker);
+      });
+
+      const particleGeometry = new THREE.BufferGeometry();
+      particleGeometry.setAttribute(
+        "position",
+        new THREE.Float32BufferAttribute(
+          [
+            -1.8, 0.92, -0.24, -1.2, -0.82, 0.12, -0.35, 1.02, -0.18, 0.28, -0.9, 0.16, 1.15, 0.76,
+            -0.12, 1.72, -0.46, 0.08,
+          ],
+          3,
+        ),
+      );
+      const particleMaterial = new THREE.PointsMaterial({
+        color: 0x8fd6c5,
+        opacity: 0.42,
+        size: 0.045,
+        transparent: true,
+      });
+      group.add(new THREE.Points(particleGeometry, particleMaterial));
+
+      scene.add(new THREE.AmbientLight(0xf4ead8, 1.55));
+      const keyLight = new THREE.DirectionalLight(0x8fd6c5, 1.6);
+      keyLight.position.set(2.8, 2.4, 4);
+      scene.add(keyLight);
+      const warmLight = new THREE.PointLight(0xd87954, 1.2, 8);
+      warmLight.position.set(-2, -1.6, 3);
+      scene.add(warmLight);
+
+      const resize = () => {
+        const width = Math.max(host.clientWidth, 1);
+        const height = Math.max(host.clientHeight, 1);
+        renderer.setSize(width, height, false);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+      };
+
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const resizeObserver = new ResizeObserver(resize);
+      let frameId = 0;
+
+      const render = (time = 0) => {
+        group.rotation.y = -0.42 + Math.sin(time * 0.00045) * 0.18;
+        group.rotation.x = -0.16 + Math.sin(time * 0.00032) * 0.04;
+        group.position.y = Math.sin(time * 0.0005) * 0.05;
+        renderer.render(scene, camera);
+
+        if (!reducedMotion) {
+          frameId = window.requestAnimationFrame(render);
+        }
+      };
+
+      resizeObserver.observe(host);
+      resize();
+      render();
+
+      cleanupScene = () => {
+        window.cancelAnimationFrame(frameId);
+        resizeObserver.disconnect();
+        tabletGeometry.dispose();
+        tabletMaterial.dispose();
+        edgeGeometry.dispose();
+        edgeMaterial.dispose();
+        lineGeometry.dispose();
+        lineMaterial.dispose();
+        dotGeometry.dispose();
+        mineralMaterial.dispose();
+        clayMaterial.dispose();
+        particleGeometry.dispose();
+        particleMaterial.dispose();
+        renderer.dispose();
+
+        if (host.contains(renderer.domElement)) {
+          host.removeChild(renderer.domElement);
+        }
+      };
+    };
+
+    void createScene();
+
+    return () => {
+      cancelled = true;
+      cleanupScene?.();
+    };
+  }, []);
+
+  return <div className="relic-3d-scene" ref={sceneRef} aria-hidden="true" />;
+}
+
 function HeroArtifact() {
   return (
     <div className="hero-artifact" aria-label="History inspired software artifact display">
       <div className="artifact-image" aria-hidden="true" />
+      <RelicScene />
       <div className="artifact-ring ring-one" aria-hidden="true" />
       <div className="artifact-ring ring-two" aria-hidden="true" />
       <div className="strata-card strata-top">
@@ -536,6 +747,42 @@ function HiringSnapshot() {
   );
 }
 
+function FieldAssistantGuide() {
+  return (
+    <section className="field-assistant" aria-label="Suggested portfolio path">
+      <div className="assistant-dino" aria-hidden="true">
+        <span className="assistant-tail" />
+        <span className="assistant-body" />
+        <span className="assistant-neck" />
+        <span className="assistant-head" />
+        <span className="assistant-leg assistant-leg-one" />
+        <span className="assistant-leg assistant-leg-two" />
+      </div>
+      <div className="assistant-copy">
+        <p className="eyebrow">Fossil trail</p>
+        <h2>Follow the strongest hiring evidence without digging through everything.</h2>
+      </div>
+      <ol className="assistant-steps">
+        <li>
+          <span>01</span>
+          <strong>Scan proof</strong>
+          <p>Start with outcomes and role fit.</p>
+        </li>
+        <li>
+          <span>02</span>
+          <strong>Open field notes</strong>
+          <p>Review architecture, decisions, tradeoffs, and proof.</p>
+        </li>
+        <li>
+          <span>03</span>
+          <strong>Check tool tray</strong>
+          <p>Connect skills to project evidence.</p>
+        </li>
+      </ol>
+    </section>
+  );
+}
+
 function ProjectVisual({ project }: { project: FeaturedProject }) {
   return (
     <div className={`artifact-preview artifact-${project.visual}`} role="img" aria-label={`${project.name} exhibit preview`}>
@@ -543,10 +790,17 @@ function ProjectVisual({ project }: { project: FeaturedProject }) {
         <span>{project.specimen}</span>
         <strong>{project.era}</strong>
       </div>
+      <div className="plate-caption">
+        <span>{project.plate.artifact}</span>
+        <strong>{project.plate.metric}</strong>
+      </div>
       <div className="specimen-slab" aria-hidden="true">
         <span className="slab-line line-one" />
         <span className="slab-line line-two" />
         <span className="slab-line line-three" />
+        <span className="slab-pin pin-one" />
+        <span className="slab-pin pin-two" />
+        <span className="slab-pin pin-three" />
         {project.visual === "earth" && (
           <div className="fossil-globe">
             <span className="globe-ridge ridge-one" />
@@ -574,8 +828,88 @@ function ProjectVisual({ project }: { project: FeaturedProject }) {
             <span className="ledger-block" />
           </div>
         )}
+        <div className="plate-traces">
+          {project.plate.traces.map((trace) => (
+            <span key={trace}>{trace}</span>
+          ))}
+        </div>
       </div>
+      <p className="plate-signal">{project.plate.signal}</p>
     </div>
+  );
+}
+
+function ArchitectureDiagram({ project }: { project: FeaturedProject }) {
+  return (
+    <div className={`architecture-diagram diagram-${project.visual}`} aria-label={`${project.name} system flow`}>
+      <div className="diagram-rail" aria-hidden="true" />
+      {project.architecture.map((item, index) => (
+        <article className="diagram-node" key={item.layer}>
+          <span>{String(index + 1).padStart(2, "0")}</span>
+          <strong>{item.layer}</strong>
+        </article>
+      ))}
+      <article className="diagram-node diagram-outcome">
+        <span>Impact</span>
+        <strong>{project.plate.metric}</strong>
+      </article>
+    </div>
+  );
+}
+
+function ToolTray() {
+  const [activeTrayId, setActiveTrayId] = useState<(typeof toolTrays)[number]["id"]>(toolTrays[0].id);
+  const activeTray = toolTrays.find((tray) => tray.id === activeTrayId) ?? toolTrays[0];
+
+  return (
+    <section className="section-block tool-tray-section" id="skills">
+      <div className="section-heading">
+        <p className="eyebrow">Tool tray</p>
+        <h2>Skills grouped by the job they do in the product.</h2>
+      </div>
+      <div className="tool-tray">
+        <div className="tool-tray-tabs" role="tablist" aria-label="Skill categories">
+          {toolTrays.map((tray) => (
+            <button
+              aria-controls={`tool-panel-${tray.id}`}
+              aria-selected={activeTray.id === tray.id}
+              className="tool-tab"
+              id={`tool-tab-${tray.id}`}
+              key={tray.id}
+              onClick={() => setActiveTrayId(tray.id)}
+              role="tab"
+              type="button"
+            >
+              <span>{tray.note}</span>
+              <strong>{tray.label}</strong>
+            </button>
+          ))}
+        </div>
+        <article
+          aria-labelledby={`tool-tab-${activeTray.id}`}
+          className="tool-tray-panel"
+          id={`tool-panel-${activeTray.id}`}
+          role="tabpanel"
+        >
+          <p className="tool-tray-signal">{activeTray.signal}</p>
+          <div className="tool-chip-grid">
+            {activeTray.skills.map((skill) => (
+              <span key={skill}>{skill}</span>
+            ))}
+          </div>
+          <div className="tool-proof-grid">
+            <div>
+              <span>Shows up in</span>
+              <strong>{activeTray.appearsIn.join(" | ")}</strong>
+            </div>
+            <div>
+              <span>Hiring signal</span>
+              <strong>{activeTray.proof}</strong>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
   );
 }
 
@@ -784,16 +1118,19 @@ function CaseStudyModal({
           ) : null}
 
           {activeTab === "architecture" ? (
-            <div className="architecture-map">
-              {project.architecture.map((item, index) => (
-                <article className="architecture-step" key={item.layer}>
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  <div>
-                    <h3>{item.layer}</h3>
-                    <p>{item.detail}</p>
-                  </div>
-                </article>
-              ))}
+            <div className="architecture-panel">
+              <ArchitectureDiagram project={project} />
+              <div className="architecture-map">
+                {project.architecture.map((item, index) => (
+                  <article className="architecture-step" key={item.layer}>
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <div>
+                      <h3>{item.layer}</h3>
+                      <p>{item.detail}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
             </div>
           ) : null}
 
@@ -827,11 +1164,14 @@ function CaseStudyModal({
               </div>
               <div>
                 <h3>Evidence log</h3>
-                <ul className="modal-list">
-                  {project.evidence.map((item) => (
-                    <li key={item}>{item}</li>
+                <div className="evidence-card-grid">
+                  {project.evidence.map((item, index) => (
+                    <article className="evidence-card" key={item}>
+                      <span>{String(index + 1).padStart(2, "0")}</span>
+                      <p>{item}</p>
+                    </article>
                   ))}
-                </ul>
+                </div>
                 <div className="stack-list modal-stack" aria-label={`${project.name} technology stack`}>
                   {project.stack.map((item) => (
                     <span key={item}>{item}</span>
@@ -992,6 +1332,7 @@ export default function Home() {
       </section>
 
       <HiringSnapshot />
+      <FieldAssistantGuide />
 
       <section className="intro-section" aria-label="About Michael">
         <p>
@@ -1068,25 +1409,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section-block capability-section" id="skills">
-        <div className="section-heading">
-          <p className="eyebrow">Toolmarks</p>
-          <h2>Grouped by how I use the technology to shape the final artifact.</h2>
-        </div>
-        <div className="capability-grid">
-          {skillGroups.map((group) => (
-            <article className="capability-card" key={group.label}>
-              <p>{group.note}</p>
-              <h3>{group.label}</h3>
-              <div className="skill-cloud">
-                {group.skills.map((skill) => (
-                  <span key={skill}>{skill}</span>
-                ))}
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+      <ToolTray />
 
       <section className="section-block experience-section" id="experience">
         <div className="section-heading">
@@ -1098,9 +1421,11 @@ export default function Home() {
             <article className="timeline-item" key={`${item.role}-${item.org}`}>
               <div className="timeline-marker" aria-hidden="true" />
               <div>
+                <p className="timeline-layer">{item.layer}</p>
                 <p className="timeline-meta">{item.meta}</p>
                 <h3>{item.role}</h3>
                 <p className="timeline-org">{item.org}</p>
+                <p className="timeline-signal">{item.signal}</p>
                 <p>{item.detail}</p>
               </div>
             </article>
