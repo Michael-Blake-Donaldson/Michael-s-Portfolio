@@ -20,6 +20,8 @@ type FeaturedProject = {
   role: string;
   outcome: string;
   engineering: string[];
+  evidence: string[];
+  lesson: string;
   stack: string[];
   visual: "earth" | "raidbase" | "planthaven";
 };
@@ -44,6 +46,13 @@ const featuredProjects: FeaturedProject[] = [
       "Semantic labels and ARIA roles for screen-reader accessibility.",
       "Performance-minded rendering strategy for dense visual layers.",
     ],
+    evidence: [
+      "Performance work centered on fewer draw calls, batching, caching, and incremental loading.",
+      "Layer controls were designed so exploration feels immediate instead of heavy.",
+      "Accessibility notes were added for a visual-first interface that still needs semantic structure.",
+    ],
+    lesson:
+      "The best data tools do not only render impressive visuals. They help people build a mental model quickly.",
     stack: ["React", "JavaScript", "WebGL", "Data visualization", "ARIA"],
     visual: "earth",
   },
@@ -66,6 +75,13 @@ const featuredProjects: FeaturedProject[] = [
       "Account export and deletion workflows for lifecycle completeness.",
       "Testing plan spanning unit, integration, and browser flows.",
     ],
+    evidence: [
+      "Release-ready alpha scope includes onboarding, authentication, profiles, LFG posts, squads, clips, and moderation.",
+      "Account lifecycle flows were planned as first-class product work rather than late cleanup.",
+      "The schema connects community behavior to trust, reputation, and team formation.",
+    ],
+    lesson:
+      "Full-stack ownership is product ownership. The database, account flows, and empty states all shape user trust.",
     stack: ["Next.js", "PostgreSQL", "Prisma", "NextAuth", "Docker", "Vitest"],
     visual: "raidbase",
   },
@@ -88,6 +104,13 @@ const featuredProjects: FeaturedProject[] = [
       "Indexed PostgreSQL schema for faster product and order queries.",
       "Performance work across lazy loading, caching, and API synchronization.",
     ],
+    evidence: [
+      "Indexed schema work reduced query response time by roughly 30-40%.",
+      "Lazy loading and caching reduced load time by roughly 25-35%.",
+      "Protected routes and API state synchronization gave the commerce flow a sturdier foundation.",
+    ],
+    lesson:
+      "A familiar product surface is a good test of engineering discipline because the details are easy for users to feel.",
     stack: ["React", "Supabase", "PostgreSQL", "Stripe", "REST APIs", "JWT"],
     visual: "planthaven",
   },
@@ -181,6 +204,117 @@ const proofPoints = [
   { value: "2027", label: "B.S. Software Engineering expected completion" },
 ];
 
+const targetRoles = ["Junior Full-Stack Engineer", "Associate Software Engineer", "Frontend Engineer", "Product Engineer"];
+
+const hiringSignals = [
+  {
+    title: "Builds complete product flows",
+    detail:
+      "Projects cover authentication, protected routes, data models, performance, accessibility, account lifecycle work, and user-facing polish.",
+  },
+  {
+    title: "Turns ambiguity into systems",
+    detail:
+      "My strongest work starts with messy workflows: finding teams, tracking listings, exploring data, or supporting decisions.",
+  },
+  {
+    title: "Brings real leadership maturity",
+    detail:
+      "Managing high-volume operations taught me ownership, follow-through, prioritization, and calm communication under pressure.",
+  },
+];
+
+const recruiterEvidence = [
+  "RaidBase shows end-to-end full-stack product ownership.",
+  "Earth 3D Dashboard shows visual engineering, performance work, and accessibility awareness.",
+  "PlantHaven shows secure commerce flows, database indexing, and API-driven state.",
+];
+
+const profileLinks = [
+  {
+    label: "GitHub",
+    detail: "Code vault",
+    href: "https://github.com/Michael-Blake-Donaldson",
+    icon: "fossil",
+    external: true,
+  },
+  {
+    label: "LinkedIn",
+    detail: "Field profile",
+    href: "https://www.linkedin.com/in/mikedonaldson1/",
+    icon: "tablet",
+    external: true,
+  },
+  {
+    label: "Email",
+    detail: "Send a note",
+    href: "mailto:blake18465@gmail.com",
+    icon: "sealed-note",
+  },
+  {
+    label: "Resume",
+    detail: "Resume scroll",
+    href: "/MichaelDonaldson_TechResume.pdf",
+    icon: "scroll",
+    download: true,
+  },
+] as const;
+
+type ProfileLink = (typeof profileLinks)[number];
+
+function ArtifactIcon({ icon }: { icon: ProfileLink["icon"] }) {
+  return (
+    <span className={`artifact-icon artifact-icon-${icon}`} aria-hidden="true">
+      <span className="artifact-icon-mark" />
+    </span>
+  );
+}
+
+function FieldTagLogo({
+  onActivate,
+  active,
+}: {
+  onActivate: () => void;
+  active: boolean;
+}) {
+  return (
+    <button
+      className={`brand-mark ${active ? "brand-mark-active" : ""}`}
+      type="button"
+      onClick={onActivate}
+      aria-label="Open recruiter field brief"
+    >
+      <span className="brand-tag-code">MD</span>
+      <span className="brand-tag-label">Hire brief</span>
+      <span className="brand-tag-pin" aria-hidden="true" />
+    </button>
+  );
+}
+
+function ProfileArtifactLinks({ className = "" }: { className?: string }) {
+  return (
+    <div className={`profile-artifacts ${className}`} aria-label="Profile and contact links">
+      {profileLinks.map((link) => (
+        <a
+          className="profile-artifact-link"
+          href={link.href}
+          key={link.label}
+          target={"external" in link && link.external ? "_blank" : undefined}
+          rel={"external" in link && link.external ? "noreferrer" : undefined}
+          download={"download" in link && link.download ? true : undefined}
+          aria-label={`${link.label}: ${link.detail}`}
+        >
+          <ArtifactIcon icon={link.icon} />
+          <span>
+            <strong>{link.label}</strong>
+            <small>{link.detail}</small>
+          </span>
+        </a>
+      ))}
+    </div>
+  );
+}
+
 function DinoRunner() {
   return (
     <div className="dino-runner" aria-hidden="true">
@@ -228,6 +362,30 @@ function HeroArtifact() {
   );
 }
 
+function HiringSnapshot() {
+  return (
+    <section className="hiring-snapshot" aria-label="Hiring snapshot">
+      <div className="hiring-snapshot-copy">
+        <p className="eyebrow">Recruiter field brief</p>
+        <h2>What hiring teams should know in the first minute.</h2>
+      </div>
+      <div className="role-chip-row" aria-label="Target roles">
+        {targetRoles.map((role) => (
+          <span key={role}>{role}</span>
+        ))}
+      </div>
+      <div className="hiring-signal-grid">
+        {hiringSignals.map((signal) => (
+          <article className="hiring-signal-card" key={signal.title}>
+            <h3>{signal.title}</h3>
+            <p>{signal.detail}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function ProjectVisual({ project }: { project: FeaturedProject }) {
   return (
     <div className={`artifact-preview artifact-${project.visual}`} role="img" aria-label={`${project.name} exhibit preview`}>
@@ -271,13 +429,99 @@ function ProjectVisual({ project }: { project: FeaturedProject }) {
   );
 }
 
+function HiringBriefModal({
+  onClose,
+  onOpenProject,
+}: {
+  onClose: () => void;
+  onOpenProject: (project: FeaturedProject) => void;
+}) {
+  return (
+    <div className="modal-backdrop" onMouseDown={onClose}>
+      <section
+        className="case-modal hiring-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="hiring-brief-title"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <div className="modal-topline">
+          <span>Recruiter Field Brief</span>
+          <button type="button" className="close-button" onClick={onClose} aria-label="Close hiring brief">
+            Close
+          </button>
+        </div>
+        <p className="eyebrow">Michael Donaldson | Full-stack software engineer</p>
+        <h2 id="hiring-brief-title">A quick read for hiring teams.</h2>
+        <p className="modal-summary">
+          I am aiming for junior, associate, frontend, full-stack, and product engineering roles where I can combine
+          hands-on implementation with product thinking, performance awareness, and real ownership.
+        </p>
+
+        <div className="brief-section">
+          <h3>Role fit</h3>
+          <div className="role-chip-row modal-role-chips" aria-label="Target roles">
+            {targetRoles.map((role) => (
+              <span key={role}>{role}</span>
+            ))}
+          </div>
+        </div>
+
+        <div className="hiring-signal-grid modal-signal-grid">
+          {hiringSignals.map((signal) => (
+            <article className="hiring-signal-card" key={signal.title}>
+              <h3>{signal.title}</h3>
+              <p>{signal.detail}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="brief-section">
+          <h3>Evidence to review</h3>
+          <ul className="modal-list evidence-list">
+            {recruiterEvidence.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+          <div className="brief-project-actions">
+            {featuredProjects.map((project) => (
+              <button key={project.name} type="button" onClick={() => onOpenProject(project)}>
+                Open {project.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="brief-section">
+          <h3>Next actions</h3>
+          <ProfileArtifactLinks className="brief-artifact-links" />
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function CaseStudyModal({
   project,
   onClose,
+  onPrevious,
+  onNext,
 }: {
   project: FeaturedProject;
   onClose: () => void;
+  onPrevious: () => void;
+  onNext: () => void;
 }) {
+  const [activeTab, setActiveTab] = useState("problem");
+
+  const tabs = [
+    { id: "problem", label: "Problem" },
+    { id: "build", label: "Build" },
+    { id: "evidence", label: "Evidence" },
+    { id: "stack", label: "Stack" },
+    { id: "lessons", label: "Lessons" },
+  ];
+
   return (
     <div className="modal-backdrop" onMouseDown={onClose}>
       <section
@@ -296,32 +540,105 @@ function CaseStudyModal({
         <p className="eyebrow">{project.category}</p>
         <h2 id="case-study-title">{project.name}</h2>
         <p className="modal-summary">{project.summary}</p>
-        <div className="modal-grid">
-          <div>
-            <h3>Problem unearthed</h3>
-            <p>{project.problem}</p>
-          </div>
-          <div>
-            <h3>My role</h3>
-            <p>{project.role}</p>
-          </div>
-          <div>
-            <h3>Engineering moves</h3>
-            <ul className="modal-list">
-              {project.engineering.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3>Outcome</h3>
-            <p>{project.outcome}</p>
-          </div>
-        </div>
-        <div className="stack-list modal-stack" aria-label={`${project.name} technology stack`}>
-          {project.stack.map((item) => (
-            <span key={item}>{item}</span>
+
+        <div className="case-tabs" role="tablist" aria-label={`${project.name} case study sections`}>
+          {tabs.map((tab) => (
+            <button
+              aria-controls={`case-panel-${tab.id}`}
+              aria-selected={activeTab === tab.id}
+              className="case-tab-button"
+              id={`case-tab-${tab.id}`}
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              role="tab"
+              type="button"
+            >
+              {tab.label}
+            </button>
           ))}
+        </div>
+
+        <div
+          aria-labelledby={`case-tab-${activeTab}`}
+          className="case-tab-panel"
+          id={`case-panel-${activeTab}`}
+          role="tabpanel"
+        >
+          {activeTab === "problem" ? (
+            <div className="modal-grid single">
+              <div>
+                <h3>Problem unearthed</h3>
+                <p>{project.problem}</p>
+              </div>
+              <div>
+                <h3>Why it mattered</h3>
+                <p>{project.outcome}</p>
+              </div>
+            </div>
+          ) : null}
+
+          {activeTab === "build" ? (
+            <div className="modal-grid">
+              <div>
+                <h3>My role</h3>
+                <p>{project.role}</p>
+              </div>
+              <div>
+                <h3>Engineering moves</h3>
+                <ul className="modal-list">
+                  {project.engineering.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ) : null}
+
+          {activeTab === "evidence" ? (
+            <div className="modal-grid">
+              <div>
+                <h3>Measured outcome</h3>
+                <p>{project.outcome}</p>
+              </div>
+              <div>
+                <h3>Evidence log</h3>
+                <ul className="modal-list">
+                  {project.evidence.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ) : null}
+
+          {activeTab === "stack" ? (
+            <div>
+              <h3>Tools in the tray</h3>
+              <div className="stack-list modal-stack" aria-label={`${project.name} technology stack`}>
+                {project.stack.map((item) => (
+                  <span key={item}>{item}</span>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {activeTab === "lessons" ? (
+            <div className="modal-grid single">
+              <div>
+                <h3>What this project taught me</h3>
+                <p>{project.lesson}</p>
+              </div>
+            </div>
+          ) : null}
+        </div>
+
+        <div className="modal-nav" aria-label="Browse case studies">
+          <button type="button" onClick={onPrevious}>
+            Previous exhibit
+          </button>
+          <button type="button" onClick={onNext}>
+            Next exhibit
+          </button>
         </div>
       </section>
     </div>
@@ -330,15 +647,17 @@ function CaseStudyModal({
 
 export default function Home() {
   const [selectedProject, setSelectedProject] = useState<FeaturedProject | null>(null);
+  const [hiringBriefOpen, setHiringBriefOpen] = useState(false);
 
   useEffect(() => {
-    if (!selectedProject) {
+    if (!selectedProject && !hiringBriefOpen) {
       return;
     }
 
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setSelectedProject(null);
+        setHiringBriefOpen(false);
       }
     };
 
@@ -349,7 +668,34 @@ export default function Home() {
       document.body.classList.remove("modal-open");
       window.removeEventListener("keydown", closeOnEscape);
     };
-  }, [selectedProject]);
+  }, [selectedProject, hiringBriefOpen]);
+
+  const selectedProjectIndex = selectedProject
+    ? featuredProjects.findIndex((project) => project.name === selectedProject.name)
+    : -1;
+
+  const selectPreviousProject = () => {
+    if (selectedProjectIndex < 0) {
+      return;
+    }
+
+    const previousIndex = (selectedProjectIndex - 1 + featuredProjects.length) % featuredProjects.length;
+    setSelectedProject(featuredProjects[previousIndex]);
+  };
+
+  const selectNextProject = () => {
+    if (selectedProjectIndex < 0) {
+      return;
+    }
+
+    const nextIndex = (selectedProjectIndex + 1) % featuredProjects.length;
+    setSelectedProject(featuredProjects[nextIndex]);
+  };
+
+  const openHiringBrief = () => {
+    setSelectedProject(null);
+    setHiringBriefOpen(true);
+  };
 
   return (
     <main className="site-shell">
@@ -358,9 +704,7 @@ export default function Home() {
       </a>
 
       <header className="site-header" aria-label="Primary navigation">
-        <a className="brand-mark" href="#top" aria-label="Michael Donaldson home">
-          <span>MD</span>
-        </a>
+        <FieldTagLogo active={hiringBriefOpen} onActivate={openHiringBrief} />
         <nav className="nav-links" aria-label="Portfolio sections">
           {navItems.map((item) => (
             <a key={item.href} href={item.href}>
@@ -382,17 +726,11 @@ export default function Home() {
             <a className="button button-primary" href="#work">
               Explore exhibits <span aria-hidden="true">-&gt;</span>
             </a>
-            <a className="button button-secondary" href="/MichaelDonaldson_TechResume.pdf">
-              Download resume
-            </a>
+            <button className="button button-secondary" type="button" onClick={openHiringBrief}>
+              Open hiring brief
+            </button>
           </div>
-          <div className="utility-links" aria-label="Profile links">
-            <a href="https://github.com/Michael-Blake-Donaldson" target="_blank" rel="noreferrer">
-              GitHub
-            </a>
-            <a href="mailto:blake18465@gmail.com">Email</a>
-            <span>LinkedIn ready to add</span>
-          </div>
+          <ProfileArtifactLinks className="hero-artifact-links" />
         </div>
 
         <HeroArtifact />
@@ -406,6 +744,8 @@ export default function Home() {
           </div>
         ))}
       </section>
+
+      <HiringSnapshot />
 
       <section className="intro-section" aria-label="About Michael">
         <p>
@@ -532,20 +872,34 @@ export default function Home() {
           </p>
         </div>
         <div className="contact-panel">
-          <a className="contact-link primary" href="mailto:blake18465@gmail.com">
-            blake18465@gmail.com
-          </a>
-          <a className="contact-link" href="https://github.com/Michael-Blake-Donaldson" target="_blank" rel="noreferrer">
-            github.com/Michael-Blake-Donaldson
-          </a>
-          <a className="contact-link" href="/MichaelDonaldson_TechResume.pdf">
-            Download MichaelDonaldson_TechResume.pdf
-          </a>
-          <p>LinkedIn and project demo links are ready to add once the final URLs are confirmed.</p>
+          <p className="contact-panel-label">Artifact drawer</p>
+          <ProfileArtifactLinks className="contact-artifact-links" />
+          <button className="button contact-brief-button" type="button" onClick={openHiringBrief}>
+            Open recruiter brief
+          </button>
+          <p>Best first read: role fit, strongest evidence, project case studies, resume, GitHub, and LinkedIn.</p>
         </div>
       </section>
 
-      {selectedProject ? <CaseStudyModal project={selectedProject} onClose={() => setSelectedProject(null)} /> : null}
+      {selectedProject ? (
+        <CaseStudyModal
+          key={selectedProject.name}
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
+          onNext={selectNextProject}
+          onPrevious={selectPreviousProject}
+        />
+      ) : null}
+
+      {hiringBriefOpen ? (
+        <HiringBriefModal
+          onClose={() => setHiringBriefOpen(false)}
+          onOpenProject={(project) => {
+            setHiringBriefOpen(false);
+            setSelectedProject(project);
+          }}
+        />
+      ) : null}
     </main>
   );
 }
