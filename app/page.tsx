@@ -22,6 +22,18 @@ type FeaturedProject = {
   engineering: string[];
   evidence: string[];
   lesson: string;
+  hiringValue: string;
+  architecture: {
+    layer: string;
+    detail: string;
+  }[];
+  decisions: {
+    choice: string;
+    reason: string;
+    tradeoff: string;
+  }[];
+  interviewAngles: string[];
+  nextSteps: string[];
   stack: string[];
   visual: "earth" | "raidbase" | "planthaven";
 };
@@ -53,6 +65,52 @@ const featuredProjects: FeaturedProject[] = [
     ],
     lesson:
       "The best data tools do not only render impressive visuals. They help people build a mental model quickly.",
+    hiringValue:
+      "Shows I can make a complex visual interface readable, performant, and accessible instead of only impressive.",
+    architecture: [
+      {
+        layer: "Interaction model",
+        detail:
+          "Layer toggles were treated as structured UI state so datasets can be explored without making the whole surface feel heavy.",
+      },
+      {
+        layer: "Rendering path",
+        detail:
+          "Draw-call reduction, batching, caching, and incremental loading kept visual density from turning into interaction lag.",
+      },
+      {
+        layer: "Accessibility layer",
+        detail:
+          "Semantic controls, ARIA labels, and plain-language layer names help a visual-first experience remain understandable.",
+      },
+    ],
+    decisions: [
+      {
+        choice: "Keep datasets modular",
+        reason: "Recruiters can see I understand component boundaries and state isolation.",
+        tradeoff: "More structure up front, but fewer tangled updates when layers change.",
+      },
+      {
+        choice: "Optimize before adding more effects",
+        reason: "A dashboard needs to feel immediate before it earns extra visual treatment.",
+        tradeoff: "Some animation ideas waited until the base render path was healthier.",
+      },
+      {
+        choice: "Describe visual data with semantic UI",
+        reason: "Accessibility is part of engineering quality, especially when the main feature is visual.",
+        tradeoff: "It required more careful naming and control design than a canvas-only build.",
+      },
+    ],
+    interviewAngles: [
+      "How I found and reduced rendering bottlenecks in a WebGL-heavy interface.",
+      "How I would explain the project to a nontechnical stakeholder who still needs to trust the data.",
+      "What telemetry I would add next: render time, layer toggle latency, and saved-view usage.",
+    ],
+    nextSteps: [
+      "Add saved layer presets so users can return to useful views.",
+      "Add performance telemetry around layer changes and initial load.",
+      "Expand keyboard navigation for dense visual exploration.",
+    ],
     stack: ["React", "JavaScript", "WebGL", "Data visualization", "ARIA"],
     visual: "earth",
   },
@@ -82,6 +140,52 @@ const featuredProjects: FeaturedProject[] = [
     ],
     lesson:
       "Full-stack ownership is product ownership. The database, account flows, and empty states all shape user trust.",
+    hiringValue:
+      "Best proof of full-stack product ownership across auth, relational data, trust systems, testing, and account lifecycle work.",
+    architecture: [
+      {
+        layer: "Identity and onboarding",
+        detail:
+          "Authentication, profiles, onboarding, and account settings create the foundation for reliable community behavior.",
+      },
+      {
+        layer: "Domain model",
+        detail:
+          "Users, squads, LFG posts, clips, reputation, and moderation are modeled as connected parts of one product system.",
+      },
+      {
+        layer: "Lifecycle and trust",
+        detail:
+          "Account export, deletion, reporting, and moderation paths are treated as core flows because trust is a feature.",
+      },
+    ],
+    decisions: [
+      {
+        choice: "Model trust as data",
+        reason: "Reputation, clips, squads, and moderation need structure, not only profile copy.",
+        tradeoff: "The schema becomes more thoughtful, but the product can support safer community behavior.",
+      },
+      {
+        choice: "Plan account lifecycle early",
+        reason: "Export and deletion flows show product maturity and privacy awareness.",
+        tradeoff: "It adds backend complexity before the flashier social features are finished.",
+      },
+      {
+        choice: "Test around journeys",
+        reason: "A team-finding app succeeds or fails through multi-step user flows.",
+        tradeoff: "Journey tests take more setup, but catch issues unit tests can miss.",
+      },
+    ],
+    interviewAngles: [
+      "How the schema maps real community behavior into users, squads, posts, clips, and reputation.",
+      "How I would reduce the MVP while protecting the trust and safety pieces that matter.",
+      "Where I would add integration tests around onboarding, squad creation, and account deletion.",
+    ],
+    nextSteps: [
+      "Deploy a seeded demo so recruiters can inspect the main flows quickly.",
+      "Add a moderation dashboard with review queues and audit history.",
+      "Add browser tests for onboarding, LFG creation, squad joining, and account deletion.",
+    ],
     stack: ["Next.js", "PostgreSQL", "Prisma", "NextAuth", "Docker", "Vitest"],
     visual: "raidbase",
   },
@@ -111,6 +215,52 @@ const featuredProjects: FeaturedProject[] = [
     ],
     lesson:
       "A familiar product surface is a good test of engineering discipline because the details are easy for users to feel.",
+    hiringValue:
+      "Shows practical full-stack discipline in secure commerce flows, API-driven state, database indexing, and performance work.",
+    architecture: [
+      {
+        layer: "Protected commerce flow",
+        detail:
+          "Authentication and protected routes keep account and checkout paths separated from public product browsing.",
+      },
+      {
+        layer: "API and state sync",
+        detail:
+          "Product, cart, checkout, and order data are kept predictable through clear API boundaries and frontend state updates.",
+      },
+      {
+        layer: "Data performance",
+        detail:
+          "PostgreSQL indexing, lazy loading, caching, and frontend optimization target the places users feel slowness first.",
+      },
+    ],
+    decisions: [
+      {
+        choice: "Index product and order queries",
+        reason: "Commerce users feel slow search, product pages, and order history immediately.",
+        tradeoff: "Indexes need care, but they make the most common reads much healthier.",
+      },
+      {
+        choice: "Protect account and checkout routes",
+        reason: "Security needs to be visible in the product structure, not only mentioned in the stack list.",
+        tradeoff: "Routing and state handling become stricter, but the user flow is safer.",
+      },
+      {
+        choice: "Optimize familiar surfaces",
+        reason: "A standard storefront is a strong test because users already know how it should feel.",
+        tradeoff: "The work is less flashy, but it exposes real engineering judgment.",
+      },
+    ],
+    interviewAngles: [
+      "How I improved query response and load time through indexing, caching, and lazy loading.",
+      "How I would test the checkout path from protected route to order confirmation.",
+      "Why ordinary commerce screens are a useful proving ground for state, security, and performance.",
+    ],
+    nextSteps: [
+      "Add an admin catalog view for inventory and product updates.",
+      "Add checkout test coverage around happy paths, failures, and empty-cart states.",
+      "Add lightweight analytics for product discovery, cart abandonment, and load-time regressions.",
+    ],
     stack: ["React", "Supabase", "PostgreSQL", "Stripe", "REST APIs", "JWT"],
     visual: "planthaven",
   },
@@ -512,15 +662,43 @@ function CaseStudyModal({
   onPrevious: () => void;
   onNext: () => void;
 }) {
-  const [activeTab, setActiveTab] = useState("problem");
+  const [activeTab, setActiveTab] = useState("brief");
+  const [copied, setCopied] = useState(false);
 
   const tabs = [
-    { id: "problem", label: "Problem" },
-    { id: "build", label: "Build" },
-    { id: "evidence", label: "Evidence" },
-    { id: "stack", label: "Stack" },
-    { id: "lessons", label: "Lessons" },
+    { id: "brief", label: "Brief" },
+    { id: "architecture", label: "Architecture" },
+    { id: "decisions", label: "Decisions" },
+    { id: "proof", label: "Proof" },
+    { id: "interview", label: "Interview" },
+    { id: "next", label: "Next" },
   ];
+
+  const projectBrief = [
+    `${project.name} | ${project.category}`,
+    `Hiring signal: ${project.hiringValue}`,
+    `Role: ${project.role}`,
+    `Outcome: ${project.outcome}`,
+    `Stack: ${project.stack.join(", ")}`,
+  ].join("\n");
+
+  const copyProjectBrief = async () => {
+    try {
+      await navigator.clipboard.writeText(projectBrief);
+      setCopied(true);
+    } catch {
+      const textArea = document.createElement("textarea");
+      textArea.value = projectBrief;
+      textArea.setAttribute("readonly", "");
+      textArea.style.position = "fixed";
+      textArea.style.opacity = "0";
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+      setCopied(true);
+    }
+  };
 
   return (
     <div className="modal-backdrop" onMouseDown={onClose}>
@@ -540,6 +718,27 @@ function CaseStudyModal({
         <p className="eyebrow">{project.category}</p>
         <h2 id="case-study-title">{project.name}</h2>
         <p className="modal-summary">{project.summary}</p>
+
+        <div className="field-note-actions">
+          <button type="button" className="copy-note-button" onClick={copyProjectBrief}>
+            {copied ? "Summary copied" : "Copy recruiter summary"}
+          </button>
+        </div>
+
+        <div className="field-note-snapshot" aria-label={`${project.name} hiring summary`}>
+          <article>
+            <span>What it proves</span>
+            <strong>{project.hiringValue}</strong>
+          </article>
+          <article>
+            <span>My role</span>
+            <strong>{project.role}</strong>
+          </article>
+          <article>
+            <span>Primary outcome</span>
+            <strong>{project.outcome}</strong>
+          </article>
+        </div>
 
         <div className="case-tabs" role="tablist" aria-label={`${project.name} case study sections`}>
           {tabs.map((tab) => (
@@ -564,41 +763,67 @@ function CaseStudyModal({
           id={`case-panel-${activeTab}`}
           role="tabpanel"
         >
-          {activeTab === "problem" ? (
-            <div className="modal-grid single">
-              <div>
-                <h3>Problem unearthed</h3>
+          {activeTab === "brief" ? (
+            <div className="field-note-grid">
+              <article className="field-note-card wide">
+                <span>Field question</span>
+                <h3>What problem was worth solving?</h3>
                 <p>{project.problem}</p>
-              </div>
-              <div>
-                <h3>Why it mattered</h3>
-                <p>{project.outcome}</p>
-              </div>
+              </article>
+              <article className="field-note-card">
+                <span>Candidate signal</span>
+                <h3>Why this matters to hiring teams</h3>
+                <p>{project.hiringValue}</p>
+              </article>
+              <article className="field-note-card">
+                <span>Lesson retained</span>
+                <h3>What stayed with me</h3>
+                <p>{project.lesson}</p>
+              </article>
             </div>
           ) : null}
 
-          {activeTab === "build" ? (
-            <div className="modal-grid">
-              <div>
-                <h3>My role</h3>
-                <p>{project.role}</p>
-              </div>
-              <div>
-                <h3>Engineering moves</h3>
-                <ul className="modal-list">
-                  {project.engineering.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </div>
+          {activeTab === "architecture" ? (
+            <div className="architecture-map">
+              {project.architecture.map((item, index) => (
+                <article className="architecture-step" key={item.layer}>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <div>
+                    <h3>{item.layer}</h3>
+                    <p>{item.detail}</p>
+                  </div>
+                </article>
+              ))}
             </div>
           ) : null}
 
-          {activeTab === "evidence" ? (
-            <div className="modal-grid">
-              <div>
-                <h3>Measured outcome</h3>
-                <p>{project.outcome}</p>
+          {activeTab === "decisions" ? (
+            <div className="decision-grid">
+              {project.decisions.map((decision) => (
+                <article className="decision-card" key={decision.choice}>
+                  <h3>{decision.choice}</h3>
+                  <p>{decision.reason}</p>
+                  <span>{decision.tradeoff}</span>
+                </article>
+              ))}
+            </div>
+          ) : null}
+
+          {activeTab === "proof" ? (
+            <div className="proof-panel">
+              <div className="proof-ledger">
+                <article>
+                  <span>Measured result</span>
+                  <strong>{project.outcome}</strong>
+                </article>
+                <article>
+                  <span>Engineering moves</span>
+                  <ul className="modal-list compact-list">
+                    {project.engineering.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </article>
               </div>
               <div>
                 <h3>Evidence log</h3>
@@ -607,27 +832,48 @@ function CaseStudyModal({
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
+                <div className="stack-list modal-stack" aria-label={`${project.name} technology stack`}>
+                  {project.stack.map((item) => (
+                    <span key={item}>{item}</span>
+                  ))}
+                </div>
               </div>
             </div>
           ) : null}
 
-          {activeTab === "stack" ? (
-            <div>
-              <h3>Tools in the tray</h3>
-              <div className="stack-list modal-stack" aria-label={`${project.name} technology stack`}>
-                {project.stack.map((item) => (
-                  <span key={item}>{item}</span>
-                ))}
-              </div>
-            </div>
-          ) : null}
-
-          {activeTab === "lessons" ? (
-            <div className="modal-grid single">
+          {activeTab === "interview" ? (
+            <div className="talk-track-panel">
               <div>
-                <h3>What this project taught me</h3>
-                <p>{project.lesson}</p>
+                <span>Interview use</span>
+                <h3>Questions this project helps me answer</h3>
+                <p>
+                  These are the strongest conversation paths I would use in an interview, because they connect the
+                  project to technical judgment rather than only describing features.
+                </p>
               </div>
+              <ol className="talk-track-list">
+                {project.interviewAngles.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ol>
+            </div>
+          ) : null}
+
+          {activeTab === "next" ? (
+            <div className="next-steps-panel">
+              <div>
+                <span>Next excavation</span>
+                <h3>What I would improve with more time</h3>
+                <p>
+                  A good field note should show judgment after the first build. These next steps show how I would keep
+                  hardening the project instead of treating it as finished forever.
+                </p>
+              </div>
+              <ul className="modal-list next-step-list">
+                {project.nextSteps.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
             </div>
           ) : null}
         </div>
