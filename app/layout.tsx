@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteTitle = "Michael Donaldson | Full-Stack Software Engineer";
+const siteTitle = "Michael Donaldson | Software Artifacts Portfolio";
 const siteDescription =
-  "Full-stack software engineering portfolio for Michael Donaldson, featuring React, Node.js, PostgreSQL, Python, WebGL, APIs, authentication, performance, accessibility, and product-minded engineering work.";
+  "A history-inspired full-stack software engineering portfolio for Michael Donaldson, presenting React, Node.js, PostgreSQL, Python, WebGL, APIs, authentication, performance, accessibility, and product-minded engineering work as modern software artifacts.";
 
 export async function generateMetadata(): Promise<Metadata> {
   const headerList = await headers();
@@ -27,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase,
     title: siteTitle,
     description: siteDescription,
-    applicationName: "Michael Donaldson Portfolio",
+    applicationName: "Michael Donaldson Software Artifacts",
     alternates: {
       canonical: "/",
     },
@@ -35,13 +35,13 @@ export async function generateMetadata(): Promise<Metadata> {
       title: siteTitle,
       description: siteDescription,
       url: "/",
-      siteName: "Michael Donaldson Portfolio",
+      siteName: "Michael Donaldson Software Artifacts",
       images: [
         {
           url: "/og.png",
           width: 1200,
           height: 630,
-          alt: "Michael Donaldson full-stack software engineering portfolio preview",
+          alt: "Michael Donaldson history-inspired software engineering portfolio preview",
         },
       ],
       locale: "en_US",
