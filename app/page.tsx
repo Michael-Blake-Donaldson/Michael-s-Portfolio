@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import ProjectAtlasScene, { type ProjectModelKey } from "./ProjectAtlasScene";
 
 const navItems = [
   { href: "#work", label: "Work" },
@@ -420,7 +421,22 @@ const proofPoints = [
   { value: "61+", label: "passing tests documented in the RaidBase alpha" },
   { value: "6", label: "scientific data layers in the Earth 3D Dashboard" },
   { value: "30+", label: "team members led in high-volume operations" },
-  { value: "2027", label: "B.S. Software Engineering expected completion" },
+  { value: "25%", label: "load-time improvement during a software internship" },
+];
+
+const practicePrinciples = [
+  {
+    label: "Observe",
+    detail: "Start with the real workflow, user friction, and constraints before choosing the solution.",
+  },
+  {
+    label: "Model",
+    detail: "Make the data, state, boundaries, and tradeoffs explicit before adding surface polish.",
+  },
+  {
+    label: "Verify",
+    detail: "Test critical journeys, measure the result, and keep refining what the evidence reveals.",
+  },
 ];
 
 const targetRoles = ["Junior Full-Stack Engineer", "Associate Software Engineer", "Frontend Engineer", "Product Engineer"];
@@ -576,196 +592,37 @@ function useDialogFocus<T extends HTMLElement>() {
   return dialogRef;
 }
 
-function RelicScene() {
-  const sceneRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const host = sceneRef.current;
-    let cleanupScene: (() => void) | undefined;
-    let cancelled = false;
-
-    if (!host) {
-      return;
-    }
-
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const compactViewport = window.matchMedia("(max-width: 680px)").matches;
-
-    if (reducedMotion || compactViewport) {
-      return;
-    }
-
-    const createScene = async () => {
-      const THREE = await import("three");
-
-      if (cancelled) {
-        return;
-      }
-
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
-      camera.position.set(0, 0, 5.4);
-
-      const renderer = new THREE.WebGLRenderer({
-        alpha: true,
-        antialias: true,
-        powerPreference: "high-performance",
-      });
-      renderer.setClearColor(0x000000, 0);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.domElement.className = "relic-3d-canvas";
-      host.appendChild(renderer.domElement);
-
-      const group = new THREE.Group();
-      group.rotation.set(-0.16, -0.42, 0.06);
-      scene.add(group);
-
-      const tabletGeometry = new THREE.BoxGeometry(2.35, 1.42, 0.18, 5, 4, 1);
-      const tabletMaterial = new THREE.MeshStandardMaterial({
-        color: 0xd7c196,
-        metalness: 0.04,
-        roughness: 0.86,
-      });
-      const tablet = new THREE.Mesh(tabletGeometry, tabletMaterial);
-      group.add(tablet);
-
-      const edgeGeometry = new THREE.EdgesGeometry(tabletGeometry);
-      const edgeMaterial = new THREE.LineBasicMaterial({
-        color: 0x5b4a36,
-        opacity: 0.52,
-        transparent: true,
-      });
-      tablet.add(new THREE.LineSegments(edgeGeometry, edgeMaterial));
-
-      const lineGeometry = new THREE.BoxGeometry(0.92, 0.035, 0.02);
-      const lineMaterial = new THREE.MeshBasicMaterial({ color: 0x211d17 });
-      [-0.32, -0.12, 0.1].forEach((y, index) => {
-        const line = new THREE.Mesh(lineGeometry, lineMaterial);
-        line.position.set(-0.22, y, 0.105);
-        line.scale.x = index === 1 ? 0.78 : 1;
-        tablet.add(line);
-      });
-
-      const dotGeometry = new THREE.SphereGeometry(0.055, 12, 12);
-      const mineralMaterial = new THREE.MeshBasicMaterial({ color: 0x8fd6c5 });
-      const clayMaterial = new THREE.MeshBasicMaterial({ color: 0xd87954 });
-      [
-        { x: 0.62, y: 0.34, material: mineralMaterial },
-        { x: 0.72, y: -0.25, material: clayMaterial },
-      ].forEach((dot) => {
-        const marker = new THREE.Mesh(dotGeometry, dot.material);
-        marker.position.set(dot.x, dot.y, 0.12);
-        tablet.add(marker);
-      });
-
-      const particleGeometry = new THREE.BufferGeometry();
-      particleGeometry.setAttribute(
-        "position",
-        new THREE.Float32BufferAttribute(
-          [
-            -1.8, 0.92, -0.24, -1.2, -0.82, 0.12, -0.35, 1.02, -0.18, 0.28, -0.9, 0.16, 1.15, 0.76,
-            -0.12, 1.72, -0.46, 0.08,
-          ],
-          3,
-        ),
-      );
-      const particleMaterial = new THREE.PointsMaterial({
-        color: 0x8fd6c5,
-        opacity: 0.42,
-        size: 0.045,
-        transparent: true,
-      });
-      group.add(new THREE.Points(particleGeometry, particleMaterial));
-
-      scene.add(new THREE.AmbientLight(0xf4ead8, 1.55));
-      const keyLight = new THREE.DirectionalLight(0x8fd6c5, 1.6);
-      keyLight.position.set(2.8, 2.4, 4);
-      scene.add(keyLight);
-      const warmLight = new THREE.PointLight(0xd87954, 1.2, 8);
-      warmLight.position.set(-2, -1.6, 3);
-      scene.add(warmLight);
-
-      const resize = () => {
-        const width = Math.max(host.clientWidth, 1);
-        const height = Math.max(host.clientHeight, 1);
-        renderer.setSize(width, height, false);
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-      };
-
-      const resizeObserver = new ResizeObserver(resize);
-      let frameId = 0;
-
-      const render = (time = 0) => {
-        group.rotation.y = -0.42 + Math.sin(time * 0.00045) * 0.18;
-        group.rotation.x = -0.16 + Math.sin(time * 0.00032) * 0.04;
-        group.position.y = Math.sin(time * 0.0005) * 0.05;
-        renderer.render(scene, camera);
-
-        if (!reducedMotion) {
-          frameId = window.requestAnimationFrame(render);
-        }
-      };
-
-      resizeObserver.observe(host);
-      resize();
-      render();
-
-      cleanupScene = () => {
-        window.cancelAnimationFrame(frameId);
-        resizeObserver.disconnect();
-        tabletGeometry.dispose();
-        tabletMaterial.dispose();
-        edgeGeometry.dispose();
-        edgeMaterial.dispose();
-        lineGeometry.dispose();
-        lineMaterial.dispose();
-        dotGeometry.dispose();
-        mineralMaterial.dispose();
-        clayMaterial.dispose();
-        particleGeometry.dispose();
-        particleMaterial.dispose();
-        renderer.dispose();
-
-        if (host.contains(renderer.domElement)) {
-          host.removeChild(renderer.domElement);
-        }
-      };
-    };
-
-    const sceneTimer = window.setTimeout(() => {
-      void createScene();
-    }, 1200);
-
-    return () => {
-      cancelled = true;
-      window.clearTimeout(sceneTimer);
-      cleanupScene?.();
-    };
-  }, []);
-
-  return <div className="relic-3d-scene" ref={sceneRef} aria-hidden="true" />;
-}
-
-function HeroArtifact() {
+function HeroProjectAtlas({
+  onOpen,
+  onSelectProject,
+}: {
+  onOpen: () => void;
+  onSelectProject: (project: ProjectModelKey) => void;
+}) {
   return (
-    <div className="hero-artifact" aria-label="History inspired software artifact display">
-      <div className="artifact-image" aria-hidden="true" />
-      <RelicScene />
-      <div className="strata-card strata-top">
-        <span>Excavation layer</span>
-        <strong>Problem</strong>
+    <figure className="hero-project-atlas">
+      <div className="project-atlas-stage">
+        <ProjectAtlasScene onSelectProject={onSelectProject} />
+        <div className="model-stage-index" aria-hidden="true">
+          <span>Project excavation atlas</span>
+          <span>Three flagship builds</span>
+        </div>
       </div>
-      <div className="strata-card strata-middle">
-        <span>Tool layer</span>
-        <strong>System design</strong>
-      </div>
-      <div className="strata-card strata-bottom">
-        <span>Impact layer</span>
-        <strong>Clearer workflow</strong>
-      </div>
-      <p className="artifact-signature">Ancient curiosity. Modern systems.</p>
-    </div>
+      <figcaption className="project-atlas-caption">
+        <div>
+          <span>Interactive project navigation</span>
+          <strong>Each 3D find opens the engineering decisions and evidence behind a real build.</strong>
+          <div className="project-atlas-links" aria-label="Open a featured project">
+            {featuredProjects.map((project) => (
+              <button type="button" key={project.name} onClick={() => onSelectProject(project.visual)}>
+                {project.name}
+              </button>
+            ))}
+          </div>
+        </div>
+        <button className="project-atlas-open" type="button" onClick={onOpen}>Expand atlas</button>
+      </figcaption>
+    </figure>
   );
 }
 
@@ -794,6 +651,7 @@ function ProjectVisual({ project }: { project: FeaturedProject }) {
             fill
             sizes="(max-width: 980px) 100vw, 46vw"
             src={project.image}
+            unoptimized
           />
         </div>
         <div className="plate-traces">
@@ -803,24 +661,6 @@ function ProjectVisual({ project }: { project: FeaturedProject }) {
         </div>
       </div>
       <p className="plate-signal">{project.plate.signal}</p>
-    </div>
-  );
-}
-
-function ArchitectureDiagram({ project }: { project: FeaturedProject }) {
-  return (
-    <div className={`architecture-diagram diagram-${project.visual}`} aria-label={`${project.name} system flow`}>
-      <div className="diagram-rail" aria-hidden="true" />
-      {project.architecture.map((item, index) => (
-        <article className="diagram-node" key={item.layer}>
-          <span>{String(index + 1).padStart(2, "0")}</span>
-          <strong>{item.layer}</strong>
-        </article>
-      ))}
-      <article className="diagram-node diagram-outcome">
-        <span>Impact</span>
-        <strong>{project.plate.metric}</strong>
-      </article>
     </div>
   );
 }
@@ -951,6 +791,60 @@ function HiringBriefModal({
         <div className="brief-section">
           <h3>Next actions</h3>
           <ProfileArtifactLinks className="brief-artifact-links" />
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function ProjectAtlasModal({
+  onClose,
+  onSelectProject,
+}: {
+  onClose: () => void;
+  onSelectProject: (project: ProjectModelKey) => void;
+}) {
+  const dialogRef = useDialogFocus<HTMLElement>();
+
+  return (
+    <div className="modal-backdrop model-modal-backdrop" onMouseDown={onClose}>
+      <section
+        aria-describedby="system-model-summary"
+        aria-labelledby="system-model-title"
+        aria-modal="true"
+        className="case-modal project-atlas-modal"
+        onMouseDown={(event) => event.stopPropagation()}
+        ref={dialogRef}
+        role="dialog"
+      >
+        <div className="modal-topline">
+          <span>Interactive project excavation</span>
+          <button type="button" className="close-button" onClick={onClose} aria-label="Close project atlas">
+            Close
+          </button>
+        </div>
+        <p className="eyebrow">Three builds worth excavating</p>
+        <h2 id="system-model-title">A 3D atlas of the work behind the resume.</h2>
+        <p className="modal-summary" id="system-model-summary">
+          The globe, community network, and growing system represent Earth Dashboard, RaidBase, and PlantHaven.
+          Each one leads directly to a case study with technical decisions, architecture, and verified evidence.
+        </p>
+        <div className="project-atlas-modal-layout">
+          <div className="project-atlas-modal-stage">
+            <ProjectAtlasScene className="project-atlas-scene-modal" onSelectProject={onSelectProject} />
+          </div>
+          <div className="project-atlas-list" aria-label="Featured project atlas">
+            {featuredProjects.map((project, index) => (
+              <button key={project.name} type="button" onClick={() => onSelectProject(project.visual)}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <div>
+                  <strong>{project.name}</strong>
+                  <p>{project.summary}</p>
+                  <small>{project.plate.metric}</small>
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
       </section>
     </div>
@@ -1109,7 +1003,13 @@ function CaseStudyModal({
 
           {activeTab === "architecture" ? (
             <div className="architecture-panel">
-              <ArchitectureDiagram project={project} />
+              <div className={`architecture-model architecture-model-${project.visual}`} aria-label={`${project.name} interactive architecture model`}>
+                <ProjectAtlasScene focusProject={project.visual} />
+                <div className="architecture-model-caption">
+                  <span>Live architecture model</span>
+                  <strong>{project.name}</strong>
+                </div>
+              </div>
               <div className="architecture-map">
                 {project.architecture.map((item, index) => (
                   <article className="architecture-step" key={item.layer}>
@@ -1175,9 +1075,10 @@ function CaseStudyModal({
 export default function Home() {
   const [selectedProject, setSelectedProject] = useState<FeaturedProject | null>(null);
   const [hiringBriefOpen, setHiringBriefOpen] = useState(false);
+  const [projectAtlasOpen, setProjectAtlasOpen] = useState(false);
 
   useEffect(() => {
-    if (!selectedProject && !hiringBriefOpen) {
+    if (!selectedProject && !hiringBriefOpen && !projectAtlasOpen) {
       document.body.classList.remove("modal-open");
       return;
     }
@@ -1186,6 +1087,7 @@ export default function Home() {
       if (event.key === "Escape") {
         setSelectedProject(null);
         setHiringBriefOpen(false);
+        setProjectAtlasOpen(false);
       }
     };
 
@@ -1196,7 +1098,7 @@ export default function Home() {
       document.body.classList.remove("modal-open");
       window.removeEventListener("keydown", closeOnEscape);
     };
-  }, [selectedProject, hiringBriefOpen]);
+  }, [selectedProject, hiringBriefOpen, projectAtlasOpen]);
 
   const selectedProjectIndex = selectedProject
     ? featuredProjects.findIndex((project) => project.name === selectedProject.name)
@@ -1222,7 +1124,24 @@ export default function Home() {
 
   const openHiringBrief = () => {
     setSelectedProject(null);
+    setProjectAtlasOpen(false);
     setHiringBriefOpen(true);
+  };
+
+  const openProjectAtlas = () => {
+    setSelectedProject(null);
+    setHiringBriefOpen(false);
+    setProjectAtlasOpen(true);
+  };
+
+  const openAtlasProject = (projectKey: ProjectModelKey) => {
+    const project = featuredProjects.find((item) => item.visual === projectKey);
+
+    if (project) {
+      setProjectAtlasOpen(false);
+      setHiringBriefOpen(false);
+      setSelectedProject(project);
+    }
   };
 
   return (
@@ -1251,22 +1170,23 @@ export default function Home() {
           <h1>Michael Donaldson.</h1>
           <p className="hero-declaration">I build clear, accessible products from complex systems.</p>
           <p className="hero-subhead">
-            Product-minded engineer working across TypeScript, JavaScript, React, Next.js, Node.js, PostgreSQL,
-            Python, Java, and interactive 3D. <span className="hero-context">My interest in history and human-made
-            tools shapes a simple principle: useful systems should make hard things easier to understand.</span>
+            Product-minded full-stack engineer building with React, Next.js, Node.js, PostgreSQL, Python, Java, and
+            interactive 3D. <span className="hero-context">I turn messy workflows into usable software, then verify
+            the result through testing, accessibility, and performance work.</span>
           </p>
+          <p className="hero-status"><span aria-hidden="true" /> Open to junior and associate roles | Orlando + remote</p>
           <div className="hero-actions" aria-label="Primary actions">
             <a className="button button-primary" href="#work">
               View selected work <span aria-hidden="true">-&gt;</span>
             </a>
-            <a className="button button-secondary" href="/MichaelDonaldson_TechResume.pdf" download>
-              Download resume
+            <a className="button button-secondary" href="/MichaelDonaldson_TechResume.pdf" target="_blank" rel="noreferrer">
+              Open resume
             </a>
           </div>
           <ProfileArtifactLinks className="hero-artifact-links" hideResume />
         </div>
 
-        <HeroArtifact />
+        <HeroProjectAtlas onOpen={openProjectAtlas} onSelectProject={openAtlasProject} />
       </section>
 
       <section className="proof-strip" aria-label="Portfolio proof points">
@@ -1324,15 +1244,31 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="intro-section" aria-label="About Michael">
-        <div>
-          <p className="eyebrow">How I work</p>
-          <h2>Technical craft with operational judgment.</h2>
+      <section className="intro-section" aria-label="How Michael works">
+        <div className="process-schematic" aria-label="Engineering loop from observation to verified outcome">
+          <p className="process-schematic-label">Engineering loop</p>
+          <span className="process-rail" aria-hidden="true" />
+          <span className="process-pulse" aria-hidden="true" />
+          {practicePrinciples.map((principle, index) => (
+            <article key={principle.label}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <div>
+                <strong>{principle.label}</strong>
+                <p>{principle.detail}</p>
+              </div>
+            </article>
+          ))}
+          <div className="process-outcome">
+            <span>Outcome</span>
+            <strong>Usable, verified software</strong>
+          </div>
         </div>
         <div className="intro-copy">
+          <p className="eyebrow">How I work</p>
+          <h2>Evidence first. Then iteration.</h2>
           <p>
-            I care about the whole product path: understanding the user problem, shaping the data model, building the
-            interface, testing critical journeys, and refining the performance and accessibility details people feel.
+            Good engineering turns incomplete information into a useful, testable model. I start by understanding the
+            actual problem, make the important tradeoffs visible, and build toward an outcome that can be verified.
           </p>
           <p>
             Leading teams in high-volume operations taught me how to prioritize, communicate clearly, and keep
@@ -1434,6 +1370,10 @@ export default function Home() {
             setSelectedProject(project);
           }}
         />
+      ) : null}
+
+      {projectAtlasOpen ? (
+        <ProjectAtlasModal onClose={() => setProjectAtlasOpen(false)} onSelectProject={openAtlasProject} />
       ) : null}
     </main>
   );

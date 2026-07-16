@@ -43,12 +43,12 @@ test("server-renders Michael Donaldson's portfolio", async () => {
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
 });
 
-test("ships verified project proof and local media", async () => {
-  const [page, css, layout] = await Promise.all([
+test("ships verified project proof and interactive 3D navigation", async () => {
+  const [page, css, layout, atlas] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
-    access(new URL("../public/deep-time-artifact.webp", import.meta.url)),
+    readFile(new URL("../app/ProjectAtlasScene.tsx", import.meta.url), "utf8"),
     access(new URL("../public/projects/earth-dashboard.png", import.meta.url)),
     access(new URL("../public/projects/raidbase-logo.png", import.meta.url)),
     access(new URL("../public/projects/planthaven-home.jpeg", import.meta.url)),
@@ -59,7 +59,14 @@ test("ships verified project proof and local media", async () => {
   assert.match(page, /61\+ passing tests/);
   assert.match(page, /Stripe webhooks/);
   assert.match(page, /useDialogFocus/);
+  assert.match(page, /Evidence first\. Then iteration\./);
+  assert.match(page, /Project excavation atlas/);
+  assert.match(page, /A 3D atlas of the work behind the resume\./);
   assert.doesNotMatch(page, /35% render gain|30-40% query gain|Open field notes/);
-  assert.match(css, /url\("\/deep-time-artifact\.webp"\)/);
+  assert.doesNotMatch(page, /hero-fossil-specimen|deinonychus-field-study|Paleoart study/);
+  assert.doesNotMatch(css, /assistant-dino|field-assistant|artifact-specimen|paleo-study/);
+  assert.match(atlas, /import\("three"\)/);
+  assert.match(atlas, /Raycaster/);
   assert.match(layout, /Michael Donaldson \| Full-Stack Software Engineer/);
+  assert.match(layout, /application\/ld\+json/);
 });

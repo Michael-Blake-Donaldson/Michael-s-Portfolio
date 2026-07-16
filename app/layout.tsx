@@ -15,7 +15,35 @@ const geistMono = Geist_Mono({
 
 const siteTitle = "Michael Donaldson | Full-Stack Software Engineer";
 const siteDescription =
-  "Michael Donaldson is a product-minded full-stack software engineer building accessible web applications, interactive 3D experiences, data systems, commerce flows, and desktop tools.";
+  "Michael Donaldson is an Orlando-based, product-minded full-stack software engineer building accessible web applications, interactive 3D experiences, data systems, commerce flows, and desktop tools.";
+
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Michael Donaldson",
+  jobTitle: "Full-Stack Software Engineer",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Orlando",
+    addressRegion: "FL",
+    addressCountry: "US",
+  },
+  sameAs: [
+    "https://github.com/Michael-Blake-Donaldson",
+    "https://www.linkedin.com/in/mikedonaldson1/",
+  ],
+  knowsAbout: [
+    "Full-stack software engineering",
+    "React",
+    "Next.js",
+    "Node.js",
+    "PostgreSQL",
+    "Python",
+    "Java",
+    "Interactive 3D",
+    "Accessibility",
+  ],
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const headerList = await headers();
@@ -28,6 +56,21 @@ export async function generateMetadata(): Promise<Metadata> {
     title: siteTitle,
     description: siteDescription,
     applicationName: "Michael Donaldson Portfolio",
+    authors: [{ name: "Michael Donaldson" }],
+    creator: "Michael Donaldson",
+    keywords: [
+      "Michael Donaldson",
+      "full-stack software engineer",
+      "React developer",
+      "Next.js developer",
+      "Orlando software engineer",
+      "frontend engineer",
+      "product engineer",
+    ],
+    robots: {
+      index: true,
+      follow: true,
+    },
     alternates: {
       canonical: "/",
     },
@@ -39,9 +82,9 @@ export async function generateMetadata(): Promise<Metadata> {
       images: [
         {
           url: "/og.png",
-          width: 1200,
-          height: 630,
-          alt: "Michael Donaldson history-inspired software engineering portfolio preview",
+          width: 1744,
+          height: 900,
+          alt: "Michael Donaldson software engineering project atlas preview",
         },
       ],
       locale: "en_US",
@@ -70,6 +113,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema).replace(/</g, "\\u003c") }}
+        />
         {children}
       </body>
     </html>
