@@ -75,10 +75,7 @@ button:focus-visible {
   position: relative;
   min-height: 100vh;
   overflow: visible;
-  background:
-    radial-gradient(circle at 16% 8%, rgba(216, 121, 84, 0.18), transparent 26rem),
-    radial-gradient(circle at 84% 12%, rgba(143, 216, 197, 0.16), transparent 24rem),
-    linear-gradient(180deg, #141510 0%, #11110e 42%, #17140f 100%);
+  background: linear-gradient(180deg, #141510 0%, #11110e 44%, #17140f 100%);
 }
 
 .site-shell::before {
@@ -119,12 +116,18 @@ button:focus-visible {
 }
 
 .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 12;
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 1rem 0;
+  padding: 0.78rem 0;
+  background: rgba(18, 18, 15, 0.86);
+  box-shadow: 0 1px 0 rgba(244, 234, 216, 0.1);
+  backdrop-filter: blur(16px);
 }
 
 .brand-mark {
@@ -134,7 +137,7 @@ button:focus-visible {
   grid-template-rows: 1fr 1fr;
   align-items: center;
   column-gap: 0.55rem;
-  width: 7.35rem;
+  width: 11.5rem;
   min-height: 3.2rem;
   border: 1px solid rgba(244, 234, 216, 0.28);
   border-radius: 8px;
@@ -164,7 +167,7 @@ button:focus-visible {
   background:
     linear-gradient(145deg, rgba(244, 234, 216, 0.22), rgba(143, 216, 197, 0.16)),
     rgba(25, 24, 20, 0.86);
-  transform: translateY(-1px) rotate(-0.5deg);
+  transform: translateY(-1px);
 }
 
 .brand-tag-code {
@@ -181,16 +184,26 @@ button:focus-visible {
 }
 
 .brand-tag-label {
-  color: var(--muted);
-  font-size: 0.63rem;
+  color: var(--paper);
+  font-size: 0.66rem;
   font-weight: 900;
+  line-height: 1;
+}
+
+.brand-tag-role {
+  color: var(--muted);
+  font-size: 0.55rem;
+  font-weight: 800;
   line-height: 1;
   text-transform: uppercase;
 }
 
 .brand-tag-pin {
-  width: 1.9rem;
-  height: 0.25rem;
+  position: absolute;
+  right: 0.65rem;
+  bottom: 0.35rem;
+  width: 1.45rem;
+  height: 0.18rem;
   border-radius: 999px;
   background: linear-gradient(90deg, var(--clay), var(--ochre), var(--mineral));
 }
@@ -202,19 +215,28 @@ button:focus-visible {
   gap: 0.35rem;
 }
 
-.nav-links a {
+.nav-links a,
+.nav-brief {
   border: 1px solid transparent;
   border-radius: 6px;
+  background: transparent;
   color: var(--muted);
+  cursor: pointer;
   font-size: 0.9rem;
   font-weight: 700;
   padding: 0.55rem 0.78rem;
 }
 
-.nav-links a:hover {
+.nav-links a:hover,
+.nav-brief:hover {
   border-color: rgba(244, 234, 216, 0.18);
   background: rgba(244, 234, 216, 0.08);
   color: var(--foreground);
+}
+
+.nav-brief {
+  border-color: rgba(143, 216, 197, 0.34);
+  color: var(--mineral);
 }
 
 .hero-section {
@@ -223,7 +245,7 @@ button:focus-visible {
   align-items: center;
   gap: 3.2rem;
   width: min(1180px, calc(100% - 32px));
-  min-height: 76vh;
+  min-height: 72vh;
   margin: 0 auto;
   padding: 4rem 0 2.5rem;
 }
@@ -263,8 +285,8 @@ h1 {
   max-width: 760px;
   margin-bottom: 1.25rem;
   color: var(--paper);
-  font-size: 4.8rem;
-  line-height: 0.96;
+  font-size: 5.1rem;
+  line-height: 0.98;
   letter-spacing: 0;
 }
 
@@ -299,11 +321,20 @@ p {
   line-height: 1.75;
 }
 
+.hero-declaration {
+  max-width: 690px;
+  margin-bottom: 1rem;
+  color: var(--paper);
+  font-size: 1.65rem;
+  font-weight: 720;
+  line-height: 1.28;
+}
+
 .hero-subhead {
   max-width: 710px;
   color: #e3d8c4;
-  font-size: 1.22rem;
-  line-height: 1.7;
+  font-size: 1.08rem;
+  line-height: 1.68;
 }
 
 .hero-actions {
@@ -342,8 +373,20 @@ p {
 
 .artifact-button {
   width: fit-content;
-  margin-top: 1.2rem;
   background: var(--ink);
+}
+
+.project-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.2rem;
+}
+
+.source-button {
+  border-color: rgba(25, 24, 20, 0.18);
+  background: transparent;
+  color: var(--ink);
 }
 
 .button:hover {
@@ -583,8 +626,7 @@ p {
   border-radius: 8px;
   background:
     linear-gradient(130deg, rgba(25, 24, 20, 0.1), rgba(25, 24, 20, 0.45)),
-    url("/deep-time-artifact.png"),
-    radial-gradient(circle at 52% 38%, rgba(143, 216, 197, 0.32), transparent 14rem),
+    url("/deep-time-artifact.webp"),
     linear-gradient(140deg, #f1e4ce, #937a5d 58%, #25221b);
   background-position: center;
   background-size: cover;
@@ -597,7 +639,7 @@ p {
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  opacity: 0.82;
+  opacity: 0.58;
   mix-blend-mode: screen;
 }
 
@@ -650,7 +692,7 @@ p {
   z-index: 4;
   display: grid;
   gap: 0.28rem;
-  width: 12rem;
+  width: 10.8rem;
   border: 1px solid rgba(244, 234, 216, 0.24);
   border-radius: 8px;
   background: rgba(18, 18, 15, 0.82);
@@ -673,13 +715,26 @@ p {
 }
 
 .strata-middle {
-  left: 1%;
-  top: 38%;
+  left: 2%;
+  top: 42%;
 }
 
 .strata-bottom {
-  right: 8%;
-  bottom: 21%;
+  right: 5%;
+  bottom: 17%;
+}
+
+.artifact-signature {
+  position: absolute;
+  left: 8%;
+  bottom: 7%;
+  z-index: 4;
+  margin: 0;
+  color: rgba(244, 234, 216, 0.72);
+  font-family: var(--font-geist-mono), Consolas, monospace;
+  font-size: 0.7rem;
+  font-weight: 850;
+  text-transform: uppercase;
 }
 
 .code-tablet {
@@ -1060,12 +1115,26 @@ p {
   gap: 1.5rem;
   width: min(1180px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 5rem 0 1rem;
+  padding: 5.5rem 0 0;
 }
 
-.intro-section p {
+.intro-section > div:first-child {
+  border-top: 1px solid rgba(244, 234, 216, 0.18);
+  padding-top: 1.5rem;
+}
+
+.intro-copy {
+  border-top: 1px solid rgba(244, 234, 216, 0.18);
+  padding-top: 1.5rem;
+}
+
+.intro-copy p {
   color: #eadfcb;
-  font-size: 1.12rem;
+  font-size: 1.05rem;
+}
+
+.intro-copy p:last-child {
+  margin-bottom: 0;
 }
 
 .section-block {
@@ -1105,6 +1174,7 @@ p {
 
 .project-card::after {
   position: absolute;
+  display: none;
   right: 1.05rem;
   top: 1.05rem;
   z-index: 3;
@@ -1154,9 +1224,7 @@ p {
 .artifact-preview::after {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(115deg, transparent 24%, rgba(251, 245, 232, 0.2) 38%, transparent 54%),
-    radial-gradient(circle at 50% 120%, rgba(25, 24, 20, 0.14), transparent 18rem);
+  background: linear-gradient(115deg, transparent 24%, rgba(251, 245, 232, 0.2) 38%, transparent 54%);
   content: "";
   opacity: 0;
   transform: translateX(-12%);
@@ -1228,10 +1296,7 @@ p {
   overflow: hidden;
   border: 1px solid rgba(25, 24, 20, 0.15);
   border-radius: 8px;
-  background:
-    radial-gradient(circle at 20% 18%, rgba(143, 216, 197, 0.18), transparent 10rem),
-    radial-gradient(circle at 78% 75%, rgba(216, 121, 84, 0.18), transparent 12rem),
-    linear-gradient(145deg, rgba(251, 245, 232, 0.86), rgba(202, 181, 145, 0.82));
+  background: linear-gradient(145deg, rgba(251, 245, 232, 0.9), rgba(202, 181, 145, 0.84));
   box-shadow: inset 0 0 0 1px rgba(251, 245, 232, 0.42), 0 24px 70px rgba(25, 24, 20, 0.18);
   transition: transform 240ms ease, box-shadow 240ms ease;
 }
@@ -1288,6 +1353,36 @@ p {
   bottom: 22%;
   left: 51%;
   background: var(--ochre);
+}
+
+.project-shot-frame {
+  position: absolute;
+  inset: 0.7rem 0.7rem 3rem;
+  z-index: 1;
+  overflow: hidden;
+  border: 1px solid rgba(25, 24, 20, 0.16);
+  border-radius: 6px;
+  background: #22251f;
+  box-shadow: 0 18px 50px rgba(25, 24, 20, 0.24);
+}
+
+.project-shot {
+  object-fit: cover;
+  object-position: center;
+}
+
+.project-shot-frame-logo {
+  inset: 1.5rem 1.5rem 3.2rem;
+  background:
+    linear-gradient(rgba(143, 216, 197, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143, 216, 197, 0.06) 1px, transparent 1px),
+    #1c2433;
+  background-size: 28px 28px;
+}
+
+.project-shot-logo {
+  object-fit: contain;
+  padding: 12%;
 }
 
 .fossil-globe,
@@ -1447,24 +1542,15 @@ p {
 }
 
 .artifact-earth .specimen-slab {
-  background:
-    radial-gradient(circle at 28% 30%, rgba(143, 216, 197, 0.2), transparent 8rem),
-    radial-gradient(circle at 62% 58%, rgba(231, 184, 95, 0.2), transparent 10rem),
-    linear-gradient(145deg, rgba(251, 245, 232, 0.88), rgba(197, 181, 151, 0.82));
+  background: linear-gradient(145deg, rgba(225, 232, 224, 0.9), rgba(173, 167, 145, 0.88));
 }
 
 .artifact-raidbase .specimen-slab {
-  background:
-    radial-gradient(circle at 68% 32%, rgba(143, 216, 197, 0.22), transparent 11rem),
-    radial-gradient(circle at 45% 76%, rgba(216, 121, 84, 0.18), transparent 11rem),
-    linear-gradient(145deg, rgba(245, 235, 214, 0.88), rgba(182, 165, 133, 0.84));
+  background: linear-gradient(145deg, rgba(220, 228, 224, 0.9), rgba(162, 158, 148, 0.86));
 }
 
 .artifact-planthaven .specimen-slab {
-  background:
-    radial-gradient(circle at 24% 70%, rgba(168, 184, 107, 0.24), transparent 10rem),
-    radial-gradient(circle at 72% 30%, rgba(143, 216, 197, 0.2), transparent 10rem),
-    linear-gradient(145deg, rgba(248, 236, 214, 0.9), rgba(196, 173, 132, 0.82));
+  background: linear-gradient(145deg, rgba(236, 235, 215, 0.92), rgba(171, 172, 138, 0.86));
 }
 
 .project-content {
@@ -1545,7 +1631,7 @@ p {
 .capability-card {
   display: grid;
   align-content: start;
-  min-height: 260px;
+  min-height: 320px;
   border: 1px solid rgba(244, 234, 216, 0.2);
   border-radius: 8px;
   background: rgba(244, 234, 216, 0.92);
@@ -1569,6 +1655,27 @@ p {
 .secondary-card p:not(.card-label),
 .capability-card p {
   color: var(--muted-dark);
+}
+
+.secondary-status {
+  width: fit-content;
+  border-left: 2px solid var(--clay);
+  font-family: var(--font-geist-mono), Consolas, monospace;
+  font-size: 0.72rem;
+  font-weight: 850;
+  padding-left: 0.55rem;
+  text-transform: uppercase;
+}
+
+.secondary-source-link {
+  width: fit-content;
+  margin-top: auto;
+  color: #6f4331;
+  font-weight: 850;
+}
+
+.secondary-source-link:hover {
+  color: var(--ink);
 }
 
 .stack-list.quiet span {
@@ -1771,6 +1878,22 @@ p {
   margin-bottom: 1rem;
 }
 
+.availability-line {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--paper);
+  font-weight: 720;
+}
+
+.availability-line span {
+  width: 0.62rem;
+  height: 0.62rem;
+  border-radius: 50%;
+  background: var(--mineral);
+  box-shadow: 0 0 0 4px rgba(143, 216, 197, 0.12);
+}
+
 .contact-panel {
   display: grid;
   gap: 0.7rem;
@@ -1834,6 +1957,21 @@ p {
   font-size: 0.9rem;
 }
 
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  border-top: 1px solid rgba(244, 234, 216, 0.14);
+  color: var(--muted);
+  font-family: var(--font-geist-mono), Consolas, monospace;
+  font-size: 0.72rem;
+  padding: 1.25rem 0 2rem;
+  text-transform: uppercase;
+}
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -1849,6 +1987,7 @@ p {
   width: min(1060px, 100%);
   max-height: min(82vh, 820px);
   overflow: auto;
+  overscroll-behavior: contain;
   border: 1px solid rgba(244, 234, 216, 0.28);
   border-radius: 8px;
   background:
@@ -1890,6 +2029,24 @@ p {
 .modal-summary {
   color: #3d382f;
   font-size: 1.1rem;
+}
+
+.case-primary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.modal-source-link {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.modal-resume-link {
+  border-color: rgba(25, 24, 20, 0.2);
+  background: transparent;
+  color: var(--ink);
 }
 
 .field-note-actions {
@@ -1963,7 +2120,7 @@ p {
 
 .case-tab-button {
   border: 1px solid rgba(25, 24, 20, 0.13);
-  border-radius: 999px;
+  border-radius: 6px;
   background: rgba(25, 24, 20, 0.055);
   color: var(--muted-dark);
   cursor: pointer;
@@ -2067,8 +2224,7 @@ p {
   border: 1px solid rgba(25, 24, 20, 0.1);
   border-radius: 8px;
   background:
-    radial-gradient(circle at 22% 20%, rgba(143, 216, 197, 0.18), transparent 8rem),
-    radial-gradient(circle at 82% 74%, rgba(216, 121, 84, 0.16), transparent 8rem),
+    linear-gradient(145deg, rgba(143, 216, 197, 0.1), rgba(216, 121, 84, 0.08)),
     rgba(251, 245, 232, 0.52);
   padding: 1rem;
 }
@@ -2155,6 +2311,11 @@ p {
   padding-left: 0.65rem;
 }
 
+.engineering-panel {
+  display: grid;
+  gap: 0.85rem;
+}
+
 .proof-panel {
   display: grid;
   gap: 1rem;
@@ -2188,6 +2349,15 @@ p {
 .proof-ledger strong {
   color: var(--ink);
   line-height: 1.5;
+}
+
+.evidence-source-link {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 0.75rem;
+  border-bottom: 1px solid rgba(25, 24, 20, 0.32);
+  color: var(--ink);
+  font-weight: 850;
 }
 
 .evidence-card-grid {
@@ -2523,14 +2693,30 @@ p {
   }
 
   .brand-mark {
-    width: 6.7rem;
+    display: grid;
+    width: 3.2rem;
+    grid-template-columns: 1fr;
+    padding: 0.42rem;
+  }
+
+  .brand-tag-code {
+    grid-row: auto;
+    margin: 0 auto;
+  }
+
+  .brand-tag-label,
+  .brand-tag-role,
+  .brand-tag-pin {
+    display: none;
   }
 
   .nav-links {
-    max-width: 16rem;
+    max-width: 18.5rem;
   }
 
-  .nav-links a {
+  .nav-links a,
+  .nav-brief {
+    font-size: 0.78rem;
     padding: 0.46rem 0.58rem;
   }
 
@@ -2541,6 +2727,42 @@ p {
 
   h2 {
     font-size: 2rem;
+  }
+
+  .hero-declaration {
+    font-size: 1.32rem;
+  }
+
+  .hero-section {
+    padding: 1.5rem 0 1.75rem;
+  }
+
+  .hero-context,
+  .hero-artifact {
+    display: none;
+  }
+
+  .hero-actions {
+    margin: 1.2rem 0 0.9rem;
+  }
+
+  .hero-artifact-links {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.45rem;
+    margin-top: 0.75rem;
+  }
+
+  .hero-artifact-links .profile-artifact-link {
+    display: grid;
+    min-width: 0;
+    grid-template-columns: 1fr;
+    place-items: center;
+    padding: 0.45rem;
+  }
+
+  .hero-artifact-links .profile-artifact-link > span:last-child {
+    display: none;
   }
 
   .hero-subhead,
@@ -2603,11 +2825,26 @@ p {
   }
 
   .proof-item {
-    min-height: 7.5rem;
+    min-height: 6.5rem;
+  }
+
+  .proof-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .project-content {
     padding: 1.2rem;
+  }
+
+  .project-actions,
+  .case-primary-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .project-actions .button,
+  .case-primary-actions .button {
+    width: 100%;
   }
 
   .artifact-preview {
@@ -2641,6 +2878,10 @@ p {
   .case-modal {
     max-height: 86vh;
     padding: 1rem;
+  }
+
+  .secondary-card {
+    min-height: 0;
   }
 
   .field-note-actions {
