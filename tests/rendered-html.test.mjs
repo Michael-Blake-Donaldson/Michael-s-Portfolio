@@ -40,6 +40,9 @@ test("server-renders Michael Donaldson's portfolio", async () => {
   assert.match(html, /id="skills"/);
   assert.match(html, /id="experience"/);
   assert.match(html, /id="contact"/);
+  assert.match(html, /Career strata/);
+  assert.match(html, /\$8M\+/);
+  assert.match(html, /Explore role evidence/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
 });
 
@@ -62,9 +65,13 @@ test("ships verified project proof and interactive 3D navigation", async () => {
   assert.match(page, /Evidence first\. Then iteration\./);
   assert.match(page, /Project excavation atlas/);
   assert.match(page, /A 3D atlas of the work behind the resume\./);
+  assert.match(page, /employees led/);
+  assert.match(page, /Product ownership, prioritization, people leadership/);
   assert.doesNotMatch(page, /35% render gain|30-40% query gain|Open field notes/);
   assert.doesNotMatch(page, /hero-fossil-specimen|deinonychus-field-study|Paleoart study/);
   assert.doesNotMatch(css, /assistant-dino|field-assistant|artifact-specimen|paleo-study/);
+  assert.match(css, /timeline-core-sample/);
+  assert.match(css, /timeline-field-notes/);
   assert.match(atlas, /import\("three"\)/);
   assert.match(atlas, /Raycaster/);
   assert.match(layout, /Michael Donaldson \| Full-Stack Software Engineer/);

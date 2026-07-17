@@ -2,6 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import {
+  ArrowUpRight,
+  BriefcaseBusiness,
+  ChevronDown,
+  Code2,
+  Download,
+  FileText,
+  GraduationCap,
+  Layers3,
+  Mail,
+  UsersRound,
+} from "lucide-react";
 import ProjectAtlasScene, { type ProjectModelKey } from "./ProjectAtlasScene";
 
 const navItems = [
@@ -382,38 +394,96 @@ const timeline = [
   {
     role: "Full-Stack Software Engineer Intern",
     org: "Unscripted Inc.",
-    layer: "Layer 01",
+    layer: "Stratum 01",
+    domain: "Software practice",
     signal: "Professional software delivery",
     meta: "Remote | May 2024-September 2024",
     detail:
-      "Contributed to full-stack development with React, REST APIs, frontend performance debugging, Agile planning, and collaborative iteration. Reduced unnecessary React re-renders and improved load time by roughly 25%.",
+      "Contributed to a full-stack product across React interfaces, REST API integration, performance investigation, and Agile delivery. Used Chrome DevTools to isolate unnecessary re-renders, refined component behavior, and improved application load time by roughly 25%. The role also built experience discussing implementation tradeoffs, responding to feedback, and delivering within a collaborative engineering workflow.",
+    icon: Code2,
+    tone: "mineral",
+    metrics: [
+      { value: "25%", label: "load-time improvement" },
+      { value: "React", label: "interface delivery" },
+      { value: "REST", label: "API collaboration" },
+    ],
+    evidence: [
+      "Profiled render behavior and reduced avoidable frontend work instead of treating performance as a final polish step.",
+      "Supported API-connected product flows and debugged behavior across the browser and application boundary.",
+      "Participated in Agile planning, review, and iterative delivery with a distributed team.",
+    ],
+    carryover: "Production habits, performance debugging, technical communication, and comfort working inside an existing product team.",
   },
   {
     role: "General Merchandise Manager",
     org: "Target",
-    layer: "Layer 02",
+    layer: "Stratum 02",
+    domain: "Leadership and ownership",
     signal: "Operational leadership under pressure",
     meta: "Orlando, Florida | December 2025-Present",
     detail:
-      "Leads an $8M+ business area across inventory, merchandising, fulfillment, and guest experience while managing and developing approximately 30 employees. Improved inventory accuracy to 98%+ and reduced shrink by roughly 15%.",
+      "Owns an $8M+ general merchandise business area spanning inventory, merchandising, fulfillment, and guest experience. Leads, coaches, and develops approximately 30 employees while setting daily priorities, allocating workload, resolving execution gaps, and keeping multiple operating rhythms aligned. Strengthened process discipline and accountability to raise inventory accuracy above 98% and reduce shrink by roughly 15%.",
+    icon: BriefcaseBusiness,
+    tone: "ochre",
+    metrics: [
+      { value: "$8M+", label: "business area owned" },
+      { value: "30", label: "employees led" },
+      { value: "98%+", label: "inventory accuracy" },
+      { value: "15%", label: "shrink reduction" },
+    ],
+    evidence: [
+      "Translates business goals into clear daily plans, ownership, and measurable follow-through across a large team.",
+      "Coaches performance, develops employees, and adapts communication for different levels of experience and urgency.",
+      "Balances inventory health, presentation, fulfillment, staffing, and guest needs while conditions change throughout the day.",
+      "Uses operational data and root-cause review to strengthen routines instead of relying on one-time fixes.",
+    ],
+    carryover: "Product ownership, prioritization, people leadership, incident response, stakeholder communication, and execution against measurable outcomes.",
   },
   {
     role: "Operations Coordinator",
     org: "The Walt Disney Company",
-    layer: "Layer 03",
+    layer: "Stratum 03",
+    domain: "Coordination and systems",
     signal: "Cross-team coordination and process improvement",
     meta: "Orlando, Florida | 2022-Present",
     detail:
-      "Coordinated high-volume operations across departments, supported 50+ employees, and improved inventory accuracy by 18% through workflow optimization and consistent follow-through.",
+      "Coordinates high-volume, guest-facing operations across departments while supporting more than 50 employees through shifting priorities, handoffs, and time-sensitive decisions. Improved inventory accuracy by 18% by clarifying workflows, reinforcing operating standards, and following issues through to resolution. The role demands calm communication and a reliable system view when many teams are moving at once.",
+    icon: UsersRound,
+    tone: "clay",
+    metrics: [
+      { value: "50+", label: "employees supported" },
+      { value: "18%", label: "accuracy improvement" },
+      { value: "Multi-team", label: "daily coordination" },
+    ],
+    evidence: [
+      "Coordinates cross-department handoffs and keeps teams aligned when priorities or operating conditions change.",
+      "Identifies process friction, clarifies ownership, and follows corrective actions through completion.",
+      "Communicates clearly under pressure while protecting both operational standards and the guest experience.",
+    ],
+    carryover: "Systems thinking, cross-functional coordination, dependable handoffs, process design, and calm execution during high-volume work.",
   },
   {
     role: "B.S. Software Engineering",
     org: "Southern New Hampshire University",
-    layer: "Layer 04",
+    layer: "Stratum 04",
+    domain: "Engineering foundation",
     signal: "Formal engineering foundation",
     meta: "Expected 2027",
     detail:
-      "Focused on software security, testing, UI/UX, computer graphics, systems analysis and design, databases, and full-stack application development.",
+      "Building a formal foundation across software security, testing, UI/UX, computer graphics, systems analysis and design, databases, and full-stack application development. Coursework reinforces the same concerns visible in the portfolio: understandable interfaces, defensible architecture, secure data flows, and software that can be tested and maintained.",
+    icon: GraduationCap,
+    tone: "paper",
+    metrics: [
+      { value: "2027", label: "expected completion" },
+      { value: "B.S.", label: "software engineering" },
+      { value: "Full-stack", label: "academic focus" },
+    ],
+    evidence: [
+      "Studies secure development, testing strategy, databases, systems analysis, and maintainable application architecture.",
+      "Applies computer graphics and UI/UX concepts to interactive work rather than keeping coursework isolated from projects.",
+      "Uses academic foundations to sharpen decisions around accessibility, security, and verification.",
+    ],
+    carryover: "A growing theoretical base beneath practical project work, with particular emphasis on security, testing, systems design, and user experience.",
   },
 ];
 
@@ -468,42 +538,32 @@ const recruiterEvidence = [
 const profileLinks = [
   {
     label: "GitHub",
-    detail: "Code vault",
+    detail: "Repositories",
     href: "https://github.com/Michael-Blake-Donaldson",
-    icon: "fossil",
+    icon: Code2,
     external: true,
   },
   {
     label: "LinkedIn",
-    detail: "Field profile",
+    detail: "Experience",
     href: "https://www.linkedin.com/in/mikedonaldson1/",
-    icon: "tablet",
+    icon: BriefcaseBusiness,
     external: true,
   },
   {
     label: "Email",
-    detail: "Send a note",
+    detail: "Get in touch",
     href: "mailto:blake18465@gmail.com",
-    icon: "sealed-note",
+    icon: Mail,
   },
   {
     label: "Resume",
-    detail: "Resume scroll",
+    detail: "PDF resume",
     href: "/MichaelDonaldson_TechResume.pdf",
-    icon: "scroll",
+    icon: FileText,
     download: true,
   },
 ] as const;
-
-type ProfileLink = (typeof profileLinks)[number];
-
-function ArtifactIcon({ icon }: { icon: ProfileLink["icon"] }) {
-  return (
-    <span className={`artifact-icon artifact-icon-${icon}`} aria-hidden="true">
-      <span className="artifact-icon-mark" />
-    </span>
-  );
-}
 
 function FieldTagLogo() {
   return (
@@ -527,23 +587,31 @@ function ProfileArtifactLinks({
 
   return (
     <div className={`profile-artifacts ${className}`} aria-label="Profile and contact links">
-      {visibleLinks.map((link) => (
-        <a
-          className="profile-artifact-link"
-          href={link.href}
-          key={link.label}
-          target={"external" in link && link.external ? "_blank" : undefined}
-          rel={"external" in link && link.external ? "noreferrer" : undefined}
-          download={"download" in link && link.download ? true : undefined}
-          aria-label={`${link.label}: ${link.detail}`}
-        >
-          <ArtifactIcon icon={link.icon} />
-          <span>
-            <strong>{link.label}</strong>
-            <small>{link.detail}</small>
-          </span>
-        </a>
-      ))}
+      {visibleLinks.map((link) => {
+        const LinkIcon = link.icon;
+        const TrailingIcon = "download" in link && link.download ? Download : ArrowUpRight;
+
+        return (
+          <a
+            className="profile-artifact-link"
+            href={link.href}
+            key={link.label}
+            target={"external" in link && link.external ? "_blank" : undefined}
+            rel={"external" in link && link.external ? "noreferrer" : undefined}
+            download={"download" in link && link.download ? true : undefined}
+            aria-label={`${link.label}: ${link.detail}`}
+          >
+            <span className="profile-link-icon" aria-hidden="true">
+              <LinkIcon size={18} strokeWidth={1.8} />
+            </span>
+            <span className="profile-link-copy">
+              <strong>{link.label}</strong>
+              <small>{link.detail}</small>
+            </span>
+            <TrailingIcon className="profile-link-action" aria-hidden="true" size={15} strokeWidth={1.8} />
+          </a>
+        );
+      })}
     </div>
   );
 }
@@ -1159,6 +1227,7 @@ export default function Home() {
             </a>
           ))}
           <button className="nav-brief" type="button" onClick={openHiringBrief}>
+            <FileText aria-hidden="true" size={15} strokeWidth={1.8} />
             Candidate brief
           </button>
         </nav>
@@ -1310,20 +1379,72 @@ export default function Home() {
           <p className="eyebrow">Experience and education</p>
           <h2>Software execution backed by leadership in real operational pressure.</h2>
         </div>
+        <div className="timeline-guide">
+          <span className="timeline-guide-icon" aria-hidden="true"><Layers3 size={20} strokeWidth={1.7} /></span>
+          <div>
+            <strong>Career strata</strong>
+            <p>Software practice, people leadership, and systems thinking built layer by layer.</p>
+          </div>
+          <div className="timeline-guide-key" aria-label="Timeline color key">
+            <span>Build</span>
+            <span>Lead</span>
+            <span>Coordinate</span>
+            <span>Learn</span>
+          </div>
+        </div>
         <div className="timeline">
-          {timeline.map((item) => (
-            <article className="timeline-item" key={`${item.role}-${item.org}`}>
-              <div className="timeline-marker" aria-hidden="true" />
-              <div>
-                <p className="timeline-layer">{item.layer}</p>
-                <p className="timeline-meta">{item.meta}</p>
-                <h3>{item.role}</h3>
-                <p className="timeline-org">{item.org}</p>
-                <p className="timeline-signal">{item.signal}</p>
-                <p>{item.detail}</p>
-              </div>
-            </article>
-          ))}
+          {timeline.map((item, index) => {
+            const RoleIcon = item.icon;
+
+            return (
+              <article className={`timeline-item timeline-item-${item.tone}`} key={`${item.role}-${item.org}`}>
+                <div className="timeline-stratum" aria-hidden="true">
+                  <span className="timeline-stratum-index">{String(index + 1).padStart(2, "0")}</span>
+                  <span className="timeline-core-sample">
+                    {[0, 1, 2, 3, 4].map((segment) => <span key={segment} />)}
+                  </span>
+                </div>
+                <div className="timeline-content">
+                  <header className="timeline-item-header">
+                    <div className="timeline-title-group">
+                      <span className="timeline-role-icon" aria-hidden="true"><RoleIcon size={19} strokeWidth={1.7} /></span>
+                      <div>
+                        <p className="timeline-layer">{item.layer} <span>/ {item.domain}</span></p>
+                        <h3>{item.role}</h3>
+                        <p className="timeline-org">{item.org}</p>
+                      </div>
+                    </div>
+                    <p className="timeline-meta">{item.meta}</p>
+                  </header>
+                  <p className="timeline-signal">{item.signal}</p>
+                  <p className="timeline-detail">{item.detail}</p>
+                  <div className="timeline-metrics" aria-label={`${item.role} scope and outcomes`}>
+                    {item.metrics.map((metric) => (
+                      <div key={`${metric.value}-${metric.label}`}>
+                        <strong>{metric.value}</strong>
+                        <span>{metric.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <details className="timeline-field-notes">
+                    <summary aria-label={`Explore ${item.role} evidence`}>
+                      <span>Explore role evidence</span>
+                      <ChevronDown aria-hidden="true" size={18} strokeWidth={1.7} />
+                    </summary>
+                    <div className="timeline-note-grid">
+                      <ul>
+                        {item.evidence.map((note) => <li key={note}>{note}</li>)}
+                      </ul>
+                      <div className="timeline-carryover">
+                        <span>Why it matters in engineering</span>
+                        <p>{item.carryover}</p>
+                      </div>
+                    </div>
+                  </details>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
 
@@ -1338,12 +1459,17 @@ export default function Home() {
           <p className="availability-line"><span aria-hidden="true" /> Available for opportunities in Orlando or remote.</p>
         </div>
         <div className="contact-panel">
-          <p className="contact-panel-label">Direct links</p>
+          <p className="contact-panel-label">Profiles and documents</p>
           <ProfileArtifactLinks className="contact-artifact-links" />
           <button className="button contact-brief-button" type="button" onClick={openHiringBrief}>
-            Review candidate brief
+            <span className="contact-brief-icon" aria-hidden="true"><FileText size={18} strokeWidth={1.8} /></span>
+            <span>
+              <strong>Candidate brief</strong>
+              <small>Role fit, proof, and project talking points</small>
+            </span>
+            <ArrowUpRight aria-hidden="true" size={16} strokeWidth={1.8} />
           </button>
-          <p>Best first read: selected work, source code, resume, and the concise candidate brief.</p>
+          <p className="contact-panel-note">A concise overview for hiring teams who want the strongest signals first.</p>
         </div>
       </section>
 
