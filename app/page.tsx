@@ -16,6 +16,9 @@ import {
 } from "lucide-react";
 import ProjectAtlasScene, { type ProjectModelKey } from "./ProjectAtlasScene";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+const assetPath = (path: string) => `${basePath}${path.startsWith("/") ? path : `/${path}`}`;
+
 const navItems = [
   { href: "#work", label: "Work" },
   { href: "#skills", label: "Skills" },
@@ -136,7 +139,7 @@ const featuredProjects: FeaturedProject[] = [
       "Expand keyboard navigation for dense visual exploration.",
     ],
     sourceHref: "https://github.com/Michael-Blake-Donaldson/Earth-3D-Dashboard",
-    image: "/projects/earth-dashboard.png",
+    image: assetPath("/projects/earth-dashboard.png"),
     imageAlt: "Earth 3D Dashboard showing an interactive globe with scientific data controls",
     plate: {
       artifact: "Layered atlas shard",
@@ -220,7 +223,7 @@ const featuredProjects: FeaturedProject[] = [
       "Add browser tests for onboarding, LFG creation, squad joining, and account deletion.",
     ],
     sourceHref: "https://github.com/Michael-Blake-Donaldson/RaidBase",
-    image: "/projects/raidbase-logo.png",
+    image: assetPath("/projects/raidbase-logo.png"),
     imageAlt: "RaidBase product mark",
     imageMode: "logo",
     plate: {
@@ -305,7 +308,7 @@ const featuredProjects: FeaturedProject[] = [
       "Add lightweight analytics for product discovery, cart abandonment, and load-time regressions.",
     ],
     sourceHref: "https://github.com/Michael-Blake-Donaldson/PlantHaven-Ecommerce_Store",
-    image: "/projects/planthaven-home.jpeg",
+    image: assetPath("/projects/planthaven-home.jpeg"),
     imageAlt: "PlantHaven storefront with filters, plant cards, cart, and account controls",
     plate: {
       artifact: "Commerce garden seal",
@@ -559,7 +562,7 @@ const profileLinks = [
   {
     label: "Resume",
     detail: "PDF resume",
-    href: "/MichaelDonaldson_TechResume.pdf",
+    href: assetPath("/MichaelDonaldson_TechResume.pdf"),
     icon: FileText,
     download: true,
   },
@@ -965,7 +968,7 @@ function CaseStudyModal({
           <a href={project.sourceHref} target="_blank" rel="noreferrer" className="button modal-source-link">
             View source code
           </a>
-          <a href="/MichaelDonaldson_TechResume.pdf" download className="button modal-resume-link">
+          <a href={assetPath("/MichaelDonaldson_TechResume.pdf")} download className="button modal-resume-link">
             Download resume
           </a>
         </div>
@@ -1248,7 +1251,7 @@ export default function Home() {
             <a className="button button-primary" href="#work">
               View selected work <span aria-hidden="true">-&gt;</span>
             </a>
-            <a className="button button-secondary" href="/MichaelDonaldson_TechResume.pdf" target="_blank" rel="noreferrer">
+            <a className="button button-secondary" href={assetPath("/MichaelDonaldson_TechResume.pdf")} target="_blank" rel="noreferrer">
               Open resume
             </a>
           </div>

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -16,6 +15,7 @@ const geistMono = Geist_Mono({
 const siteTitle = "Michael Donaldson | Full-Stack Software Engineer";
 const siteDescription =
   "Michael Donaldson is an Orlando-based, product-minded full-stack software engineer building accessible web applications, interactive 3D experiences, data systems, commerce flows, and desktop tools.";
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
 
 const personSchema = {
   "@context": "https://schema.org",
@@ -45,63 +45,56 @@ const personSchema = {
   ],
 };
 
-export async function generateMetadata(): Promise<Metadata> {
-  const headerList = await headers();
-  const host = headerList.get("x-forwarded-host") ?? headerList.get("host") ?? "localhost:3000";
-  const protocol = headerList.get("x-forwarded-proto") ?? (host.includes("localhost") ? "http" : "https");
-  const metadataBase = new URL(`${protocol}://${host}`);
-
-  return {
-    metadataBase,
+export const metadata: Metadata = {
+  metadataBase: new URL(`${siteUrl}/`),
+  title: siteTitle,
+  description: siteDescription,
+  applicationName: "Michael Donaldson Portfolio",
+  authors: [{ name: "Michael Donaldson" }],
+  creator: "Michael Donaldson",
+  keywords: [
+    "Michael Donaldson",
+    "full-stack software engineer",
+    "React developer",
+    "Next.js developer",
+    "Orlando software engineer",
+    "frontend engineer",
+    "product engineer",
+  ],
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: `${siteUrl}/`,
+  },
+  openGraph: {
     title: siteTitle,
     description: siteDescription,
-    applicationName: "Michael Donaldson Portfolio",
-    authors: [{ name: "Michael Donaldson" }],
-    creator: "Michael Donaldson",
-    keywords: [
-      "Michael Donaldson",
-      "full-stack software engineer",
-      "React developer",
-      "Next.js developer",
-      "Orlando software engineer",
-      "frontend engineer",
-      "product engineer",
+    url: `${siteUrl}/`,
+    siteName: "Michael Donaldson Portfolio",
+    images: [
+      {
+        url: `${siteUrl}/og.png`,
+        width: 1744,
+        height: 900,
+        alt: "Michael Donaldson software engineering project atlas preview",
+      },
     ],
-    robots: {
-      index: true,
-      follow: true,
-    },
-    alternates: {
-      canonical: "/",
-    },
-    openGraph: {
-      title: siteTitle,
-      description: siteDescription,
-      url: "/",
-      siteName: "Michael Donaldson Portfolio",
-      images: [
-        {
-          url: "/og.png",
-          width: 1744,
-          height: 900,
-          alt: "Michael Donaldson software engineering project atlas preview",
-        },
-      ],
-      locale: "en_US",
-      type: "website",
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: siteTitle,
-      description: siteDescription,
-      images: ["/og.png"],
-    },
-    icons: {
-      icon: "/favicon.svg",
-      shortcut: "/favicon.svg",
-    },
-  };
-}
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
+    images: [`${siteUrl}/og.png`],
+  },
+  icons: {
+    icon: `${siteUrl}/favicon.svg`,
+    shortcut: `${siteUrl}/favicon.svg`,
+  },
+};
 
 export default function RootLayout({
   children,

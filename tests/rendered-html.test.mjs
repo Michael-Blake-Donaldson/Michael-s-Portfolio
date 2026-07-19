@@ -2,33 +2,9 @@ import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
-async function render() {
-  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
-  const { default: worker } = await import(workerUrl.href);
+test("exports a public, static portfolio", async () => {
+  const html = await readFile(new URL("../out/index.html", import.meta.url), "utf8");
 
-  return worker.fetch(
-    new Request("http://localhost/", {
-      headers: { accept: "text/html" },
-    }),
-    {
-      ASSETS: {
-        fetch: async () => new Response("Not found", { status: 404 }),
-      },
-    },
-    {
-      waitUntil() {},
-      passThroughOnException() {},
-    },
-  );
-}
-
-test("server-renders Michael Donaldson's portfolio", async () => {
-  const response = await render();
-  assert.equal(response.status, 200);
-  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
-
-  const html = await response.text();
   assert.match(html, /<title>Michael Donaldson \| Full-Stack Software Engineer<\/title>/i);
   assert.match(html, /Michael Donaldson\./);
   assert.match(html, /I build clear, accessible products from complex systems\./);
@@ -43,19 +19,25 @@ test("server-renders Michael Donaldson's portfolio", async () => {
   assert.match(html, /Career strata/);
   assert.match(html, /\$8M\+/);
   assert.match(html, /Explore role evidence/);
+  assert.doesNotMatch(html, /signin-with-chatgpt|signout-with-chatgpt|log in|sign in/i);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/i);
 });
 
-test("ships verified project proof and interactive 3D navigation", async () => {
-  const [page, css, layout, atlas] = await Promise.all([
+test("ships portfolio assets and GitHub Pages configuration", async () => {
+  const [page, css, layout, atlas, config, workflow] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/ProjectAtlasScene.tsx", import.meta.url), "utf8"),
-    access(new URL("../public/projects/earth-dashboard.png", import.meta.url)),
-    access(new URL("../public/projects/raidbase-logo.png", import.meta.url)),
-    access(new URL("../public/projects/planthaven-home.jpeg", import.meta.url)),
-    access(new URL("../public/MichaelDonaldson_TechResume.pdf", import.meta.url)),
+    readFile(new URL("../next.config.ts", import.meta.url), "utf8"),
+    readFile(new URL("../.github/workflows/deploy-pages.yml", import.meta.url), "utf8"),
+    access(new URL("../out/projects/earth-dashboard.png", import.meta.url)),
+    access(new URL("../out/projects/raidbase-logo.png", import.meta.url)),
+    access(new URL("../out/projects/planthaven-home.jpeg", import.meta.url)),
+    access(new URL("../out/MichaelDonaldson_TechResume.pdf", import.meta.url)),
+    access(new URL("../out/og.png", import.meta.url)),
+    access(new URL("../out/favicon.svg", import.meta.url)),
+    access(new URL("../out/.nojekyll", import.meta.url)),
   ]);
 
   assert.match(page, /Babylon\.js/);
@@ -76,4 +58,9 @@ test("ships verified project proof and interactive 3D navigation", async () => {
   assert.match(atlas, /Raycaster/);
   assert.match(layout, /Michael Donaldson \| Full-Stack Software Engineer/);
   assert.match(layout, /application\/ld\+json/);
+  assert.doesNotMatch(layout, /next\/headers|headers\(\)/);
+  assert.match(config, /output: "export"/);
+  assert.match(workflow, /actions\/upload-pages-artifact@v4/);
+  assert.match(workflow, /actions\/deploy-pages@v4/);
+  await assert.rejects(access(new URL("../app/chatgpt-auth.ts", import.meta.url)));
 });
